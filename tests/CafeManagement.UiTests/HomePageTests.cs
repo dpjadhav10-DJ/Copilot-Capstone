@@ -40,6 +40,7 @@ public sealed class HomePageTests
         Assert.That(_driver.FindElement(By.CssSelector("[data-testid='navigation']")).Text, Does.Not.Contain("Explore"));
         Assert.That(_driver.FindElement(By.CssSelector("[data-testid='navigation']")).Text, Does.Not.Contain("Contact Us"));
         Assert.That(_driver.FindElement(By.CssSelector("[data-testid='story-content']")).Text, Does.Contain("This iconic place is dedicated to the \"Musafir\""));
+        AssertFooterPresentation();
     }
 
     [Test]
@@ -155,5 +156,45 @@ public sealed class HomePageTests
         }
 
         Assert.That((bool)script.ExecuteScript("return arguments[0].getBoundingClientRect().bottom <= arguments[1].getBoundingClientRect().top + 1;", navigation, storyPanel), Is.True);
+        AssertFooterPresentation();
+    }
+
+    [Test]
+    public void FooterPersistsAcrossClientRenderedViews()
+    {
+        _driver.Navigate().GoToUrl(Environment.GetEnvironmentVariable("CAFE_BASE_URL") ?? "http://localhost:8080");
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='story-content']")).Displayed);
+
+        foreach (var navigationTestId in new[] { "nav-menu", "nav-calculate-bill", "nav-contact", "nav-home" })
+        {
+            _driver.FindElement(By.CssSelector($"[data-testid='{navigationTestId}']")).Click();
+            if (navigationTestId == "nav-home")
+            {
+                wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='story-content']")).Text.Contains("This iconic place is dedicated"));
+            }
+            else
+            {
+                wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='application-footer']")).Displayed);
+            }
+
+            AssertFooterPresentation();
+        }
+    }
+
+    private void AssertFooterPresentation()
+    {
+        var footers = _driver.FindElements(By.CssSelector("[data-testid='application-footer']"));
+        Assert.That(footers, Has.Count.EqualTo(1));
+        var footer = footers[0];
+        Assert.That(footer.TagName, Is.EqualTo("footer"));
+        Assert.That(footer.Text, Is.EqualTo("All the rights reserved for the cafe to the management."));
+        Assert.That(footer.FindElements(By.CssSelector("a, button, input, select, textarea, form")), Is.Empty);
+        Assert.That(footer.GetAttribute("tabindex"), Is.Null.Or.EqualTo("-1"));
+
+        var script = (IJavaScriptExecutor)_driver;
+        Assert.That(script.ExecuteScript("return getComputedStyle(arguments[0]).fontStyle;", footer), Is.EqualTo("italic"));
+        Assert.That(script.ExecuteScript("return getComputedStyle(arguments[0]).fontFamily;", footer), Does.Contain("DM Sans"));
+        Assert.That((bool)script.ExecuteScript("const footer = arguments[0].getBoundingClientRect(); const content = arguments[1].getBoundingClientRect(); return Math.abs((footer.left + footer.right) / 2 - (content.left + content.right) / 2) <= 1 && footer.top >= content.bottom - 1 && footer.right <= window.innerWidth;", footer, _driver.FindElement(By.CssSelector(".content-grid"))), Is.True);
     }
 }
