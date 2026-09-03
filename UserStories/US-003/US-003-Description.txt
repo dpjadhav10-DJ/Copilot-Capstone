@@ -1,0 +1,22 @@
+User Story Id: US-003
+
+User Story Title: Implementation of Contact Us Page
+
+Description: New Page for Contact Us Details for cafe should be implemented as per the details below.
+
+Requirements:
+1. Create a Web Page which opens on clicking on "Contact Us" link on from home page as per details below,
+- New Page with "Find us At" Title should open in Right Section where Story of a cafe is displayed on home page.
+- New page should have 2 sections with titled as "Reach us at:" and "Connect us at:" displayed below page title.
+- "Reach us at:" section should have Address details and Phone Number of the cafe as provided below,
+Address: "Musafir Cafe", 7 Hills Road, Pune. 411036
+Phone No: +91-9860121455, +91-8485859396
+- "Connect us at:" section should have Social Media details for the cafe as provided below,
+{Facebook Logo}: "https://www.facebook.com/BeMusafir"
+{Instagram Logo}: "https://www.instagram.com/BeMusafir"
+2. Whenever user navigates to "Contact Us" page from Home Page, this new page should be displayed.
+3. Link to social media platforms should be opened in new tab of the browser.
+4. Do follow the existing theme, color sheme and design of an application.
+
+Definition of done:
+1. Newly added pages should be integrated at correct places in existing application and should work in complete workflow so consider integration testing as well for the new page with functional testing of new page with positive, negative and corner cases.

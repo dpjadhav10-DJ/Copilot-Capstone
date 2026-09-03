@@ -1,4 +1,35 @@
-# Copilot Capstone
+# Musafir Cafe
+
+A locally hostable Cafe Management Web Application home page for US-001. The application uses ASP.NET Core (.NET 8), TypeScript, SQL Server, and Selenium WebDriver with Chrome.
+
+## Run locally
+
+1. Execute `database/001-create-cafe-story.sql` in SQL Server Management Studio. The script creates the `MusafirCafe` database, `CafeStory` table, unique active-story index, and initial story seed.
+2. Confirm the connection string in `src/CafeManagement/appsettings.json` points to the local SQL Server instance.
+3. Build the browser client from `src/CafeManagement` with `npm install` followed by `npm run build`. The checked-in `wwwroot/main.js` bundle is also available for environments without Node.js.
+4. From the repository root, run `dotnet restore CafeManagement.sln` and `dotnet run --project src/CafeManagement/CafeManagement.csproj`.
+5. Open [http://localhost:8080](http://localhost:8080).
+
+## Selenium tests
+
+Start the application, ensure Chrome is installed, then run:
+
+```text
+dotnet test tests/CafeManagement.UiTests/CafeManagement.UiTests.csproj
+```
+
+Set `CAFE_BASE_URL` to override the default test URL. The Selenium test expects ChromeDriver to be available through Selenium Manager or the machine PATH.
+
+## Scope
+
+The page displays Musafir Cafe branding, the required definition line, four future-navigation items linking to `https://coffeeformusafir.in/`, and the cafe story retrieved from SQL Server. Bill calculation, menu management, contact, and location workflows remain outside US-001.
+
+## Workflow artifacts
+
+- [User story](UserStories/US-001/US-001-Description.txt)
+- [Requirement analysis](UserStories/US-001/US-001-RequirementAnalysis.md)
+- [System architecture](UserStories/US-001/US-001-SystemArchitecture.md)
+- [Implementation plan](UserStories/US-001/US-001-ImplementationPlan.md)
 
 Copilot Capstone is a GitHub Copilot-powered project for the EPAM AI Learnings track. The repository currently contains a set of agent definitions that outline a structured delivery workflow for a Cafe Management Web Application.
 

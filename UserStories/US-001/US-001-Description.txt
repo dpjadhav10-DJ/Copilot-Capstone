@@ -1,0 +1,21 @@
+User Story Id: US-001
+
+User Story Title: Musafir Cafe Home Page
+
+Description: User story covers implementation for home page of Cafe Management Web Application.
+
+Requirements:
+1. Create a Home page for Cafe Management Web Application with title - Musafir Cafe.
+2. Top banner should contain a logo depicting love for coffee in left side and name of the cafe in cursue writing as "Musafir Cafe".
+3. Banner should contain a product definition line as, "Where coffee brings out story in your heart.."
+4. Left panel should have placeholder links for future development, Calculate Bill, Add/Remove Cafe Menu, Contact Us, Locate us, etc.
+5. Description area to the right side of items, should have a story about cafe as provided below.
+
+Story of a cafe:
+This iconic place is dedicated to the "Musafir" (Traveller at heart) within yourself and we encourage you to discuss stories at your heart while enjoying every sip of delicious coffee we serve.
+We would love to witness your success and celebrations and we promise to be an encouragement in your lows by listening to your heart over a up of coffee.
+We would love to be your a coffee companion...wishing you a memorable coffee today...
+
+Definition of done:
+1. Locally hosted Web page link should be provided.
+2. Database creation for storage and retrival of "Story of a Cafe" details and for future use.

@@ -1,0 +1,61 @@
+User Story Id: US-004
+
+User Story Title: Implementation of Calculate Bill Module
+
+Description: New Module for Calculate Bill for cafe should be implemented as per the details below.
+
+Requirements:
+1. Create a new Web Page which opens on clicking on "Calculate Bill" link on from home page as per details below,
+- New Page with "Generating Bill" Title should open in Right Section where Story of a cafe is displayed on home page.
+- New page should have 2 verticle sections with titled as "Select Item:" and "Estimated Bill:" displayed below page title.
+
+A. "Select Item:" section should have details like,
+a. Select Item: Drop down with menu name to select item from existing list of item from menu.
+b. Select Portion: Radio Button with options Half and Full with default selected as Half.
+c. Quantity: Dropdown to select the numeric value for quanity of the item selected.
+d. Amount: Should be calculated by retrieving price for the item and portion from database and multiplied with quality to add in the bill
+e. "Add To Bill": Button to add selected bill record to the.
+
+B. Estimated Bill:
+- This section should have a list of items added to bill in tabular format with columns named as Item, Portion, Quantity, Price, Amount, Edit, Remove.
+- Each column should have values populated as per the added item from left section as described by name, where Edit and Remove columns should have Pencil and Cross Icons respectively to edit the quantity in the bill and remove the item from bill.
+- Amount should be calculated for the item considering Item Name, Portion, Price and Quanity selected, also the total bill at the bottom of the table should be displayed summing the amounts of each item in the bill.
+- Initially this table should not have any item added and total set to 0 while starting to calculate the bill.
+- Whenever new item is added to bill from left side section of "Select Item", table should be updated with new addition.
+Suppose a item named as "Regular Coffee" is added to bill priced at 20 Rs for Half portion with quality selected as 5 then, Entry should be added in table as,
+Item: Regular Coffee
+Portion: Half
+Quality: 5
+Amount: 100
+And Total Bill should be updated as by adding 100 to previous total amount the at bottom.
+
+- Whenever any item is removed from bill by clicking on cross icon for the record in the table then, table should updated with removal.
+Suppose a item named as "Regular Coffee" is removed from bill priced at 20 Rs for Half portion with quality selected as 5 then, Entry should removed from table,
+Item: Regular Coffee
+Portion: Half
+Quality: 5
+Amount: 100
+And Total Bill should be updated by deducting 100 from previous total amount the at bottom.
+
+- Whenever any item is edited in bill by clicking on pencil icon for the record in the table then, table should updated with changes.
+Suppose a item named as "Regular Coffee" is updated in bill priced at 20 Rs for Half portion with quality selected as 5 and changed to 4 then, Entry should updated in the table as,
+Item: Regular Coffee
+Portion: Half
+Quality: should change from 5 to 4
+Amount: should change from 100 to 80
+And Total Bill should be updated as addition/deduction as per the latest amount for the item updated.
+
+- There should be a "Generate Bill" button at the bottom of the Estimated bill table which will trigger pop up asking user for confirmation.
+a. When user confirms the pop up, it should generate final bill page, displaying table of estimated bill as final bill with buttons as,
+- "Print" Button - It should download the PDF file of the Bill table with Cafe Name at the top.
+- "Generate New Bill" - It should navigate you back to Calculate Bill Page to generate new bill.
+b. When User Cancels the pop up then user should land back on the Calculate Bill Page with pre-filled details in estimated bill.
+
+- There should be a "Discard Bill" button at the bottom of the Estimated bill table which will trigger pop up asking user for confirmation.
+a. When user confirms the pop up, it should remove all the items added in the estimated bill till now and land on Calculate bill page to generate fresh new bill.
+b. When User Cancels the pop up then user should land back on the Calculate Bill Page with pre-filled details in estimated bill.
+
+2. Do follow the existing theme, color sheme and design of an application.
+
+Definition of done:
+1. Newly added pages should be integrated at correct places in existing application and should work in complete workflow so consider integration testing as well for the new page with functional testing of new page with positive, negative and corner cases.

@@ -1,0 +1,18 @@
+User Story Id: US-005
+
+User Story Title: Implementation of UI Changes on Home Page
+
+Description: UI changes for the home page to rename/remove the links on the home page.
+
+Requirements:
+1. Rename the link text "Contact Us" on home page to8 "Reach Us At"
+- New link text should not change any other functionality of the application, landing page after clicking on the link and any flow of the application.
+- New link text should follow existing theme, font, color, style of the application.
+
+2. Remove the link "Locate Us" from the home page as of now, we will add it later whenever required.
+- There should not be any UI Distortion occur due to this link removal.
+
+3. Do follow the existing theme, color sheme and design of an application.
+
+Definition of done:
+1. Link text rename and removal should not cause any kind of functional breakdown or flow break down of an application.
