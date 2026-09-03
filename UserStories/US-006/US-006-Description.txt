@@ -1,0 +1,17 @@
+User Story Id: US-006
+
+User Story Title: Addition of Footer Message at the bottom of the Application Pages
+
+Description: Footer Message should be added at the bottom of the application pages.
+
+Requirements:
+1. New Footer Message should be added in all the pages in the application.
+- Message: "All the rights reserved for the cafe to the management."
+- Message should be added with banner in the bottom.
+- Text should be displayed in Italic, Regular Text Font, Centrally placed in all the application pages.
+
+2. Do follow the existing theme, color scheme and design of an application.
+
+Definition of done:
+1. Message should be visible in all the pages of the Application.
+2. Message should not be clickable.
