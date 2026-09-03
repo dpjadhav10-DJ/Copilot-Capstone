@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Musafir Cafe, where coffee brings out story in your heart.">
+  <title>Musafir Cafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="page-shell" data-testid="home-page">
+    <header class="hero" data-testid="banner">
+      <div class="coffee-mark" aria-label="Coffee cup logo" role="img">☕</div>
+      <div>
+        <p class="eyebrow">A place for the traveller at heart</p>
+        <h1 data-testid="cafe-name">Musafir Cafe</h1>
+        <p class="definition" data-testid="definition-line">Where coffee brings out story in your heart..</p>
+      </div>
+      <div class="hero-rule" aria-hidden="true"></div>
+    </header>
+
+    <div class="content-grid">
+      <nav class="side-panel" aria-label="Cafe navigation" data-testid="navigation">
+        <p class="panel-label">Explore</p>
+        <a href="https://coffeeformusafir.in/" data-testid="nav-calculate-bill">Calculate Bill</a>
+        <a href="https://coffeeformusafir.in/" data-testid="nav-menu">Add/Remove Cafe Menu</a>
+        <a href="https://coffeeformusafir.in/" data-testid="nav-contact">Contact Us</a>
+        <a href="https://coffeeformusafir.in/" data-testid="nav-locate">Locate us</a>
+        <p class="side-note">Come in curious.<br>Leave with a story.</p>
+      </nav>
+
+      <section class="story-panel" aria-labelledby="story-heading">
+        <div class="section-kicker">Story of a cafe</div>
+        <h2 id="story-heading">Pull up a chair.</h2>
+        <div id="story-content" class="story-copy" data-testid="story-content" aria-live="polite">
+          <p class="loading-state">Pouring the first cup...</p>
+        </div>
+        <div id="story-error" class="error-state" data-testid="story-error" hidden>
+          The cafe story is taking a quiet moment. Please try again soon.
+        </div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
