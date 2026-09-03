@@ -44,6 +44,30 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .menu-form fieldset { display: flex; gap: 18px; margin: 0 0 8px; padding: 0; border: 0; }
 .menu-form legend { margin-bottom: 7px; font-weight: 700; }
 .form-error { margin-top: 8px; color: #9b3f2b; }
+.bill-layout { display: grid; gap: 34px; }
+.bill-selection, .bill-estimate { padding-top: 8px; }
+.bill-selection h3, .bill-estimate h3 { margin: 0 0 18px; color: var(--green); font-size: 18px; }
+#bill-form { display: grid; max-width: 420px; gap: 9px; }
+#bill-form select { width: 100%; padding: 11px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: inherit; }
+#bill-form fieldset { display: flex; gap: 18px; margin: 8px 0; padding: 0; border: 0; }
+#bill-form legend { margin-bottom: 7px; font-weight: 700; }
+.bill-amount, .bill-total { color: var(--green); font-weight: 700; }
+.empty-state { padding: 20px; border: 1px dashed var(--line); color: var(--muted); }
+.bill-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.bill-table th, .bill-table td { padding: 12px 9px; border-bottom: 1px solid var(--line); text-align: left; }
+.bill-table th { color: var(--green); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+.bill-table button { min-width: 38px; padding: 7px 10px; font-size: 18px; line-height: 1; }
+.bill-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.final-bill { overflow-x: auto; }
+@media print {
+  body { background: white; }
+  .page-shell { max-width: none; padding: 0; }
+  .hero, .side-panel, .section-kicker, .bill-actions { display: none !important; }
+  .content-grid { display: block; }
+  .story-panel { padding: 0; }
+  .final-bill { overflow: visible; }
+  .bill-table button { display: none; }
+}
 @media (max-width: 700px) {
   .page-shell { padding: 16px 16px 30px; }
   .hero { grid-template-columns: 1fr; gap: 18px; min-height: 360px; padding: 34px 26px; }
@@ -53,4 +77,5 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   .side-note { margin-top: 24px; }
   .story-panel { padding: 38px 26px 48px; }
   .story-copy { font-size: 16px; }
+  .bill-table { min-width: 680px; }
 }

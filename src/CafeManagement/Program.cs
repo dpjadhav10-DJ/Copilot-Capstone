@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://localhost:8080");
 builder.Services.AddSingleton<CafeStoryService>();
 builder.Services.AddSingleton<MenuService>();
+builder.Services.AddSingleton<BillService>();
 
 var app = builder.Build();
 app.UseDefaultFiles();
@@ -64,6 +65,36 @@ app.MapDelete("/api/menu", async ([FromBody] RemoveMenuItemsRequest request, [Fr
     {
         logger.LogError(exception, "Menu removal failed.");
         return Results.Problem("The menu item could not be removed.", statusCode: StatusCodes.Status503ServiceUnavailable);
+    }
+});
+
+app.MapGet("/api/menu/bill-options", async (BillService billService, ILogger<Program> logger, CancellationToken cancellationToken) =>
+{
+    try
+    {
+        return Results.Ok(await billService.GetOptionsAsync(cancellationToken));
+    }
+    catch (Exception exception)
+    {
+        logger.LogError(exception, "Bill menu options retrieval failed.");
+        return Results.Problem("The bill menu is currently unavailable.", statusCode: StatusCodes.Status503ServiceUnavailable);
+    }
+});
+
+app.MapPost("/api/bill/calculate", async ([FromBody] CalculateBillRequest request, [FromServices] BillService billService, [FromServices] ILogger<Program> logger, CancellationToken cancellationToken) =>
+{
+    try
+    {
+        var result = await billService.CalculateAsync(request, cancellationToken);
+        if (result.Errors.Count > 0) return Results.ValidationProblem(result.Errors);
+        return result.NotFound
+            ? Results.NotFound(new { message = "The selected menu item and portion are unavailable." })
+            : Results.Ok(result.Line);
+    }
+    catch (Exception exception)
+    {
+        logger.LogError(exception, "Bill calculation failed.");
+        return Results.Problem("The bill amount could not be calculated.", statusCode: StatusCodes.Status503ServiceUnavailable);
     }
 });
 
