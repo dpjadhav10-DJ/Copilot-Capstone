@@ -34,4 +34,14 @@ public sealed class HomePageTests
         Assert.That(_driver.FindElements(By.CssSelector("[data-testid='navigation'] a")), Has.Count.EqualTo(4));
         Assert.That(_driver.FindElement(By.CssSelector("[data-testid='story-content']")).Text, Does.Contain("This iconic place is dedicated to the \"Musafir\""));
     }
+
+    [Test]
+    public void MenuNavigationStaysInsideTheApplication()
+    {
+        _driver.Navigate().GoToUrl(Environment.GetEnvironmentVariable("CAFE_BASE_URL") ?? "http://localhost:8080");
+
+        var menuLink = _driver.FindElement(By.CssSelector("[data-testid='nav-menu']"));
+
+        Assert.That(menuLink.GetAttribute("href"), Does.EndWith("#menu"));
+    }
 }
