@@ -1,0 +1,72 @@
+User Story Id: US-002
+
+User Story Title: Implementation of Add or Remove Cafe Menu Module
+
+Description: New Module to add or remove menu in cafe should be implemented as per the details below.
+
+Requirements:
+1. Create a Web Page which opens on clicking on "Add/Remove Cafe Menu" link on from home page as per details below,
+- New Page with "Add/Remove Cafe Menu" Title should open in Right Section where Story of a cafe is displayed on home page.
+- New page should have 2 buttons at the top as "Add Menu", "Remove Menu" and Menu should be displayed below in multipage tabular format with columns as, "Checkbox (To select Menu)", Name of Item, Portion (Half/Full), Price and pagination should have 10 records in a page with arrows to go to next and previous page.
+- "Remove Menu" button should be disabled by default and gets enabled only when atleast one item is selected using checkbox. If item is deselected then button should be disabled again.
+- When clicked on "Add Menu" button it should open a form in same area which should have fields like, Item Name (Textbox), Portion (Radio button with options as Half and Full), Price (Textbox), Save Button and Cancel Button.
+- Add Menu page should have validations applied when clicked on Save button for each field as Name should not be empty, price should not be negative, by default portion selection is set to Half.
+- When clicked on Save button menu should be added in database and and user should be navigated to "Add/Remove Cafe Menu" Page and new entry should be added at the top of the table in menu table.
+- When Clicked on Cancel changes should not be saved.
+2. When menu item is selected using checkbox clicked on Remove Menu Button then that item entry should be removed from table and database.
+3. Whenever user navigates to "Add/Remove Cafe Menu" page updated list of menu should be displayed retrieving from database.
+4. Do follow the existing theme, color sheme and design of an application.
+5. Do add below items in the menu by default,
+Item 1:
+ a. Item Name: Regular Coffee
+ b. Item Portion: Half
+ c. Item Price: 15
+
+Item 2:
+ a. Item Name: Regular Coffee
+ b. Item Portion: Full
+ c. Item Price: 25
+
+Item 3:
+ a. Item Name: Regular Tea
+ b. Item Portion: Half
+ c. Item Price: 12
+
+Item 4:
+ a. Item Name: Regular Tea
+ b. Item Portion: Full
+ c. Item Price: 20
+
+Item 5:
+ a. Item Name: Veg Club Sandwitch
+ b. Item Portion: NA
+ c. Item Price: 50
+
+Item 6:
+ a. Item Name: French Fries - Regular
+ b. Item Portion: Half
+ c. Item Price: 60
+
+Item 7:
+ a. Item Name: French Fries - Regular
+ b. Item Portion: Full
+ c. Item Price: 90
+
+Item 8:
+ a. Item Name: Bun Butter
+ b. Item Portion: NA
+ c. Item Price: 40
+
+Item 9:
+ a. Item Name: Regular Maggie
+ b. Item Portion: NA
+ c. Item Price: 50
+
+Item 10:
+ a. Item Name: Veg Maggie
+ b. Item Portion: NA
+ c. Item Price: 60
+
+Definition of done:
+1. Database tables creation to creation, removal and retrival of menu items details.
+2. Newly added pages should be integrated at correct places in existing application and should work in complete workflow so consider integration testing as well for the new page with functional testing of new page with positive, negative and corner cases.
