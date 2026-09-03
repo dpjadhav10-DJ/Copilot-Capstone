@@ -1,5 +1,6 @@
 using CafeManagement.Models;
 using CafeManagement.Services;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://localhost:8080");
@@ -39,7 +40,7 @@ app.MapGet("/api/menu", async (int? page, int? pageSize, MenuService menuService
     }
 });
 
-app.MapPost("/api/menu", async (CreateMenuItemRequest request, MenuService menuService, ILogger<Program> logger, CancellationToken cancellationToken) =>
+app.MapPost("/api/menu", async ([FromBody] CreateMenuItemRequest request, [FromServices] MenuService menuService, [FromServices] ILogger<Program> logger, CancellationToken cancellationToken) =>
 {
     try
     {
@@ -53,7 +54,7 @@ app.MapPost("/api/menu", async (CreateMenuItemRequest request, MenuService menuS
     }
 });
 
-app.MapDelete("/api/menu", async (RemoveMenuItemsRequest request, MenuService menuService, ILogger<Program> logger, CancellationToken cancellationToken) =>
+app.MapDelete("/api/menu", async ([FromBody] RemoveMenuItemsRequest request, [FromServices] MenuService menuService, [FromServices] ILogger<Program> logger, CancellationToken cancellationToken) =>
 {
     try
     {
