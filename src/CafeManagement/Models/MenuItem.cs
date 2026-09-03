@@ -19,3 +19,22 @@ public sealed record CreateMenuItemRequest(
     decimal? Price);
 
 public sealed record RemoveMenuItemsRequest(IReadOnlyList<int>? MenuItemIds);
+
+public sealed record BillMenuOption(
+    int MenuItemId,
+    string ItemName,
+    string Portion,
+    decimal Price);
+
+public sealed record CalculateBillRequest(
+    int MenuItemId,
+    string? Portion,
+    int Quantity);
+
+public sealed record CalculatedBillLine(
+    int MenuItemId,
+    string ItemName,
+    string Portion,
+    int Quantity,
+    decimal Price,
+    decimal Amount);

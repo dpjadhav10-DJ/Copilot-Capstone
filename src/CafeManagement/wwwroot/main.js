@@ -1,7 +1,117 @@
 const storyPanel = document.querySelector('.story-panel');
 const menuLink = document.querySelector('#menu-link');
+const calculateBillLink = document.querySelector('#calculate-bill-link');
 let storyContent;
 let storyError;
+let billLines = [];
+let nextBillLineId = 1;
+let billOptions = [];
+
+function money(value) { return `Rs ${value.toFixed(2)}`; }
+function escapeHtml(value) { return value.replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character] ?? character); }
+function calculateTotal() { return billLines.reduce((total, line) => total + Math.round(line.amount * 100), 0) / 100; }
+
+function showCalculateBill() {
+  if (!storyPanel) return;
+  storyPanel.innerHTML = '<div class="section-kicker">Bill preparation</div><h2 id="bill-heading">Generating Bill</h2><div class="bill-layout"><section class="bill-selection" aria-labelledby="select-item-heading"><h3 id="select-item-heading">Select Item:</h3><form id="bill-form"><label for="bill-item">Select Item:</label><select id="bill-item" required><option value="">Loading menu...</option></select><fieldset><legend>Select Portion:</legend><label><input type="radio" name="bill-portion" value="Half" checked> Half</label><label><input type="radio" name="bill-portion" value="Full"> Full</label></fieldset><label for="bill-quantity">Quantity:</label><select id="bill-quantity"></select><p id="bill-amount" class="bill-amount" aria-live="polite">Amount: Select an item</p><button id="add-to-bill" type="submit">Add To Bill</button><p id="bill-form-error" class="form-error" role="alert" hidden></p></form></section><section class="bill-estimate" aria-labelledby="estimated-bill-heading"><h3 id="estimated-bill-heading">Estimated Bill:</h3><div id="bill-table-region" aria-live="polite"></div><div class="bill-actions"><button id="generate-bill" type="button" disabled>Generate Bill</button><button id="discard-bill" type="button">Discard Bill</button></div></section></div>';
+  const quantity = document.querySelector('#bill-quantity');
+  for (let value = 1; value <= 10; value += 1) quantity?.add(new Option(String(value), String(value)));
+  document.querySelector('#bill-form')?.addEventListener('submit', event => void addBillLine(event));
+  document.querySelector('#bill-item')?.addEventListener('change', updateSelectedAmount);
+  document.querySelector('#bill-quantity')?.addEventListener('change', updateSelectedAmount);
+  document.querySelectorAll('input[name="bill-portion"]').forEach(input => input.addEventListener('change', updateSelectedAmount));
+  document.querySelector('#generate-bill')?.addEventListener('click', generateBill);
+  document.querySelector('#discard-bill')?.addEventListener('click', discardBill);
+  renderBillTable();
+  void loadBillOptions();
+}
+
+async function loadBillOptions() {
+  const select = document.querySelector('#bill-item');
+  if (!select) return;
+  try {
+    const response = await fetch('/api/menu/bill-options');
+    if (!response.ok) throw new Error('Bill menu request failed');
+    billOptions = await response.json();
+    const itemNames = [...new Set(billOptions.map(option => option.itemName))];
+    select.replaceChildren(new Option(itemNames.length ? 'Choose an item' : 'No billable items available', ''));
+    itemNames.forEach(itemName => select.add(new Option(itemName, itemName)));
+    select.disabled = itemNames.length === 0;
+  } catch {
+    select.replaceChildren(new Option('Menu unavailable', ''));
+    select.disabled = true;
+    showBillError('The bill menu is currently unavailable.');
+  }
+}
+
+function selectedPortion() { return document.querySelector('input[name="bill-portion"]:checked')?.value ?? 'Half'; }
+function updateSelectedAmount() {
+  const select = document.querySelector('#bill-item');
+  const amount = document.querySelector('#bill-amount');
+  if (!select || !amount) return;
+  const option = billOptions.find(item => item.itemName === select.value && item.portion === selectedPortion());
+  const quantity = Number(document.querySelector('#bill-quantity')?.value ?? 1);
+  amount.textContent = option ? `Amount: ${money(option.price * quantity)}` : select.value ? `Amount: ${selectedPortion()} is unavailable for this item` : 'Amount: Select an item';
+}
+function calculateLine(menuItemId, portion, quantity) {
+  return fetch('/api/bill/calculate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ menuItemId, portion, quantity }) });
+}
+function showBillError(message) { const error = document.querySelector('#bill-form-error'); if (error) { error.textContent = message; error.hidden = false; } }
+
+async function addBillLine(event) {
+  event.preventDefault();
+  const item = document.querySelector('#bill-item');
+  const quantity = document.querySelector('#bill-quantity');
+  if (!item?.value || !quantity?.value) { showBillError('Select an item and quantity before adding it to the bill.'); return; }
+  const button = document.querySelector('#add-to-bill');
+  if (button) button.disabled = true;
+  try {
+    const selected = billOptions.find(option => option.itemName === item.value && option.portion === selectedPortion());
+    if (!selected) throw new Error('Selected portion is unavailable');
+    const response = await calculateLine(selected.menuItemId, selectedPortion(), Number(quantity.value));
+    if (!response.ok) throw new Error('Bill calculation failed');
+    billLines.push({ ...(await response.json()), lineId: nextBillLineId++ });
+    renderBillTable(); item.value = ''; updateSelectedAmount();
+  } catch { showBillError('The selected item could not be added to the bill.'); }
+  finally { if (button) button.disabled = false; }
+}
+
+function renderBillTable() {
+  const region = document.querySelector('#bill-table-region');
+  if (!region) return;
+  if (billLines.length === 0) region.innerHTML = `<p class="empty-state">No items added yet. Total: ${money(0)}</p>`;
+  else {
+    const table = document.createElement('table'); table.className = 'bill-table'; table.dataset.testid = 'bill-table';
+    table.innerHTML = '<thead><tr><th scope="col">Item</th><th scope="col">Portion</th><th scope="col">Quantity</th><th scope="col">Price</th><th scope="col">Amount</th><th scope="col">Edit</th><th scope="col">Remove</th></tr></thead>';
+    const body = document.createElement('tbody');
+    billLines.forEach(line => {
+      const row = document.createElement('tr'); row.dataset.lineId = String(line.lineId);
+      [line.itemName, line.portion, String(line.quantity), money(line.price), money(line.amount)].forEach(value => { const cell = document.createElement('td'); cell.textContent = value; row.append(cell); });
+      const edit = document.createElement('button'); edit.type = 'button'; edit.textContent = '✎'; edit.ariaLabel = `Edit quantity for ${line.itemName}`; edit.addEventListener('click', () => void editBillLine(line.lineId));
+      const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = '×'; remove.ariaLabel = `Remove ${line.itemName}`; remove.addEventListener('click', () => removeBillLine(line.lineId));
+      const editCell = document.createElement('td'); editCell.append(edit); const removeCell = document.createElement('td'); removeCell.append(remove); row.append(editCell, removeCell); body.append(row);
+    });
+    table.append(body); const total = document.createElement('p'); total.className = 'bill-total'; total.textContent = `Total: ${money(calculateTotal())}`; region.replaceChildren(table, total);
+  }
+  const generate = document.querySelector('#generate-bill'); if (generate) generate.disabled = billLines.length === 0;
+}
+
+async function editBillLine(lineId) {
+  const line = billLines.find(item => item.lineId === lineId); if (!line) return;
+  const value = window.prompt(`Quantity for ${line.itemName} (1-10):`, String(line.quantity)); if (value === null) return;
+  const quantity = Number(value); if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) { showBillError('Quantity must be a whole number between 1 and 10.'); return; }
+  try { const response = await calculateLine(line.menuItemId, line.portion, quantity); if (!response.ok) throw new Error('Bill recalculation failed'); const updated = await response.json(); billLines = billLines.map(item => item.lineId === lineId ? { ...updated, lineId } : item); renderBillTable(); }
+  catch { showBillError('The quantity could not be updated.'); }
+}
+function removeBillLine(lineId) { billLines = billLines.filter(line => line.lineId !== lineId); renderBillTable(); }
+function generateBill() { if (billLines.length > 0 && window.confirm('Generate this bill?')) showFinalBill(); }
+function discardBill() { if (window.confirm('Discard this bill?')) { billLines = []; showCalculateBill(); } }
+function showFinalBill() {
+  if (!storyPanel) return;
+  storyPanel.innerHTML = `<div class="section-kicker">Final bill</div><h2 id="final-bill-heading">Musafir Cafe</h2><section class="final-bill" data-testid="final-bill" aria-labelledby="final-bill-heading"><table class="bill-table"><thead><tr><th scope="col">Item</th><th scope="col">Portion</th><th scope="col">Quantity</th><th scope="col">Price</th><th scope="col">Amount</th></tr></thead><tbody>${billLines.map(line => `<tr><td>${escapeHtml(line.itemName)}</td><td>${escapeHtml(line.portion)}</td><td>${line.quantity}</td><td>${money(line.price)}</td><td>${money(line.amount)}</td></tr>`).join('')}</tbody></table><p class="bill-total">Total: ${money(calculateTotal())}</p><div class="bill-actions"><button id="print-bill" type="button">Print</button><button id="new-bill" type="button">Generate New Bill</button></div></section>`;
+  document.querySelector('#print-bill')?.addEventListener('click', () => window.print());
+  document.querySelector('#new-bill')?.addEventListener('click', () => { billLines = []; showCalculateBill(); });
+}
 
 function renderStory(story) {
   if (!storyContent) return;
@@ -108,3 +218,4 @@ storyContent = document.querySelector('#story-content');
 storyError = document.querySelector('#story-error');
 void loadStory();
 menuLink?.addEventListener('click', event => { event.preventDefault(); showMenu(); });
+calculateBillLink?.addEventListener('click', event => { event.preventDefault(); showCalculateBill(); });
