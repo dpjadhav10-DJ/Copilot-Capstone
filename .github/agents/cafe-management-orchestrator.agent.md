@@ -1,7 +1,16 @@
 ---
 name: Cafe Management Orchestrator
 description: "Copilot Workspace orchestrator for the Cafe Management Web Application. Coordinates requirements, architecture, design review, implementation, code review, testing, and publishing in strict sequence."
-tools: [read, search, edit]
+tools: [read, search, edit, agent]
+agents:
+  - Requirement Analyst
+  - System Architecture Creator
+  - Design Reviewer
+  - Implementation Planner
+  - Application Implementor
+  - Code Reviewer
+  - Application Tester
+  - Changes Publisher
 user-invocable: true
 argument-hint: "Provide a UserStoryId in the format {UserStoryId} or US-{UserStoryId}."
 ---
