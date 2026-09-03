@@ -24,8 +24,28 @@ Follow these steps in order and do not skip any:
 1. **Inspect current changes**
    - Review modified, added, and deleted files.
    - Infer purpose from the code itself.
+   - Inspect the current branch, upstream tracking branch, remotes, commits ahead of `main`, and any existing pull request.
+   - Run `git diff --check`.
 
-2. **Prepare the PR description**
+2. **Run publication preflight**
+   - Verify that GitHub CLI is available before attempting GitHub operations.
+   - Run `gh auth status` and confirm that the authenticated account can access the repository.
+   - If `gh` is unavailable or authentication fails, stop with status `Aborted` and report the exact prerequisite, such as installing GitHub CLI or running `gh auth login`.
+   - Do not claim that a branch or PR was published unless the corresponding command succeeds.
+
+3. **Prepare a publication preview**
+   - Before any commit, push, or pull-request operation, show the user:
+     - Pending worktree files and whether each is proposed for inclusion.
+     - Commits already present locally and on the remote.
+     - Source branch and target branch.
+     - Proposed commit message, if a commit is needed.
+     - Proposed PR title and complete PR description.
+     - Test evidence, limitations, and publication risks.
+   - Ask for explicit confirmation before changing repository or publication state.
+   - If the user rejects the preview, report `Cancelled` and perform no mutation.
+   - If the user requests revisions, revise the preview and ask again.
+
+4. **Prepare the PR description**
    - Include:
      - **Summary** — 2-3 sentence overview of what was built and why.
      - **Changes Made** — bullet list of all added/modified files and why.
@@ -34,28 +54,38 @@ Follow these steps in order and do not skip any:
      - **Reviewer Checklist** — tick-list for approval.
    - Keep it clear, concise, and reviewer-friendly.
 
-3. **Commit the changes**
+5. **Commit the changes after confirmation**
    - Use a professional, descriptive commit message.
    - Include only intended files.
    - Exclude unrelated or temporary files.
-   - If uncommitted changes are not ready, stop and ask for confirmation.
+   - Commit only the files explicitly approved in the preview.
+   - Do not create an empty commit when all intended changes are already committed.
+   - If uncommitted changes are not ready or their scope is unclear, stop and ask for clarification.
 
-4. **Publish the branch**
+6. **Publish the branch after confirmation**
    - Push the commit(s) to the remote branch.
-   - Confirm success.
+   - If the branch and commit are already up to date on the remote, report that push is already complete and continue to PR discovery.
+   - Confirm push success from command output.
    - If branch naming is unclear, confirm before publishing.
 
-5. **Create the pull request**
+7. **Create or locate the pull request after confirmation**
+   - Check whether a pull request already exists for the source branch before creating one.
    - Open a PR against `main`.
    - Attach the prepared PR description.
    - Use a concise title that matches the change scope.
    - Ensure source and destination branches are correct.
+   - Use valid PowerShell syntax: place backticks only at the end of a continued line, or omit them for a single-line command.
+   - Confirm PR creation from command output and capture its URL.
 
-6. **Return the result**
+8. **Return the result**
    - Report publishing status.
    - Include the PR link if created.
    - Summarize commit and PR outcome.
    - If any step fails, report it clearly and do not claim completion.
+   - Distinguish `Completed`, `Cancelled`, and `Aborted`:
+     - `Completed` means the intended commit, push, and PR operations succeeded or the already-complete state was verified.
+     - `Cancelled` means the user declined or withdrew approval before mutation.
+     - `Aborted` means a prerequisite, command, access check, or publication operation failed.
 
 ## Pull Request Description Format
 Use this exact structure:
@@ -87,8 +117,10 @@ Use this exact structure:
 - Follow best professional software engineering practices.
 - Commit only verified and intended changes.
 - Do not push or create a PR unless ready.
+- Do not commit, push, or create a PR before explicit confirmation of the publication preview.
 - Do not include unrelated files in the commit.
 - Keep the PR description factual and accurate.
+- Never expose credentials, tokens, or secret values in output.
 - If the repository state is unclear, ask for clarification before proceeding.
 
 ## Final Response Format

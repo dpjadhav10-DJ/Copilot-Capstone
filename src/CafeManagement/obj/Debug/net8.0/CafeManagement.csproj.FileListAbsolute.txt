@@ -1,4 +1,5 @@
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\src\CafeManagement\bin\Debug\net8.0\appsettings.json
+C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\src\CafeManagement\bin\Debug\net8.0\package-lock.json
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\src\CafeManagement\bin\Debug\net8.0\package.json
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\src\CafeManagement\bin\Debug\net8.0\tsconfig.json
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\src\CafeManagement\bin\Debug\net8.0\CafeManagement.staticwebassets.runtime.json

@@ -44,4 +44,32 @@ public sealed class HomePageTests
 
         Assert.That(menuLink.GetAttribute("href"), Does.EndWith("#menu"));
     }
+
+    [Test]
+    public void ContactUsShowsCafeDetailsAndSafeSocialLinks()
+    {
+        _driver.Navigate().GoToUrl(Environment.GetEnvironmentVariable("CAFE_BASE_URL") ?? "http://localhost:8080");
+
+        var contactLink = _driver.FindElement(By.CssSelector("[data-testid='nav-contact']"));
+        Assert.That(contactLink.GetAttribute("href"), Does.EndWith("#contact-us"));
+
+        contactLink.Click();
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+        wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='contact-title']")).Displayed);
+
+        Assert.That(_driver.FindElement(By.CssSelector("[data-testid='contact-title']")).Text, Is.EqualTo("Find us At"));
+        Assert.That(_driver.FindElement(By.CssSelector("[data-testid='reach-us-section']")).Text, Does.Contain("\"Musafir Cafe\", 7 Hills Road, Pune. 411036"));
+        Assert.That(_driver.FindElement(By.CssSelector("[data-testid='reach-us-section']")).Text, Does.Contain("+91-9860121455, +91-8485859396"));
+
+        var facebook = _driver.FindElement(By.CssSelector("[data-testid='facebook-link']"));
+        var instagram = _driver.FindElement(By.CssSelector("[data-testid='instagram-link']"));
+        Assert.That(facebook.GetAttribute("href"), Is.EqualTo("https://www.facebook.com/BeMusafir"));
+        Assert.That(instagram.GetAttribute("href"), Is.EqualTo("https://www.instagram.com/BeMusafir"));
+        Assert.That(facebook.GetAttribute("target"), Is.EqualTo("_blank"));
+        Assert.That(instagram.GetAttribute("target"), Is.EqualTo("_blank"));
+        Assert.That(facebook.GetAttribute("rel"), Is.EqualTo("noopener noreferrer"));
+        Assert.That(instagram.GetAttribute("rel"), Is.EqualTo("noopener noreferrer"));
+        Assert.That(facebook.GetAttribute("aria-label"), Is.EqualTo("Facebook"));
+        Assert.That(instagram.GetAttribute("aria-label"), Is.EqualTo("Instagram"));
+    }
 }
