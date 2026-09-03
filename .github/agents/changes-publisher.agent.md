@@ -1,7 +1,7 @@
 ---
 name: Changes Publisher
 description: "Use for committing validated Cafe Management Web Application changes, publishing the branch, and creating a pull request to merge into main."
-tools: [read, search, edit]
+tools: [read, search, edit, execute]
 user-invocable: true
 argument-hint: "Provide the target branch or let the agent inspect the current workspace changes."
 ---
