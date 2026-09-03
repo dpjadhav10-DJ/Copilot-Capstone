@@ -12,6 +12,7 @@ const storyError = document.querySelector<HTMLElement>('#story-error');
 const storyPanel = document.querySelector<HTMLElement>('.story-panel');
 const menuLink = document.querySelector<HTMLAnchorElement>('#menu-link');
 const calculateBillLink = document.querySelector<HTMLAnchorElement>('#calculate-bill-link');
+const contactLink = document.querySelector<HTMLAnchorElement>('[data-testid="nav-contact"]');
 let billLines: BillLine[] = [];
 let nextBillLineId = 1;
 let billOptions: BillOption[] = [];
@@ -41,6 +42,11 @@ function showCalculateBill(): void {
   document.querySelector<HTMLButtonElement>('#discard-bill')?.addEventListener('click', discardBill);
   renderBillTable();
   void loadBillOptions();
+}
+
+function showContactUs(): void {
+  if (!storyPanel) return;
+  storyPanel.innerHTML = '<div class="section-kicker">Contact information</div><h2 id="contact-heading" data-testid="contact-title">Find us At</h2><div class="contact-details" data-testid="contact-content"><section class="contact-section" id="reach-us-section" data-testid="reach-us-section" aria-labelledby="reach-us-heading"><h3 id="reach-us-heading">Reach us at:</h3><address data-testid="cafe-address">&quot;Musafir Cafe&quot;, 7 Hills Road, Pune. 411036</address><p data-testid="cafe-phone">Phone No: +91-9860121455, +91-8485859396</p></section><section class="contact-section" id="connect-us-section" data-testid="connect-us-section" aria-labelledby="connect-us-heading"><h3 id="connect-us-heading">Connect us at:</h3><div class="social-links"><a href="https://www.facebook.com/BeMusafir" target="_blank" rel="noopener noreferrer" data-testid="facebook-link" aria-label="Facebook"><span class="contact-logo contact-logo-facebook" aria-hidden="true">f</span><span>Facebook</span></a><a href="https://www.instagram.com/BeMusafir" target="_blank" rel="noopener noreferrer" data-testid="instagram-link" aria-label="Instagram"><span class="contact-logo contact-logo-instagram" aria-hidden="true">ig</span><span>Instagram</span></a></div></section></div>';
 }
 
 async function loadBillOptions(): Promise<void> {
@@ -292,3 +298,4 @@ async function loadStory(): Promise<void> {
 void loadStory();
 menuLink?.addEventListener('click', event => { event.preventDefault(); showMenu(); });
 calculateBillLink?.addEventListener('click', event => { event.preventDefault(); showCalculateBill(); });
+contactLink?.addEventListener('click', event => { event.preventDefault(); showContactUs(); });

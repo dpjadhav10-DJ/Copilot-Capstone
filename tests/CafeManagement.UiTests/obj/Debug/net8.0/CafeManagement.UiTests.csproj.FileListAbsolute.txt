@@ -1,9 +1,3 @@
-C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.csproj.AssemblyReference.cache
-C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.AssemblyInfoInputs.cache
-C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.AssemblyInfo.cs
-C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.csproj.CoreCompileInputs.cache
-C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.sourcelink.json
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\bin\Debug\net8.0\testhost.dll
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\bin\Debug\net8.0\testhost.exe
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\bin\Debug\net8.0\selenium-manager\linux\selenium-manager
@@ -96,6 +90,12 @@ C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeM
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\bin\Debug\net8.0\zh-Hant\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\bin\Debug\net8.0\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\bin\Debug\net8.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.csproj.AssemblyReference.cache
+C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.AssemblyInfoInputs.cache
+C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.AssemblyInfo.cs
+C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.csproj.CoreCompileInputs.cache
+C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.sourcelink.json
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeMana.C21977DB.Up2Date
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\CafeManagement.UiTests.dll
 C:\Users\DeepakJadhav\source\repos\Capstone-Copilot\Copilot-Capstone\tests\CafeManagement.UiTests\obj\Debug\net8.0\refint\CafeManagement.UiTests.dll

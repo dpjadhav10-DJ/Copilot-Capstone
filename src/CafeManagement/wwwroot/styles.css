@@ -30,6 +30,15 @@ h1 { margin: 0; color: var(--paper); font-family: 'Pacifico', cursive; font-size
 .story-panel h2 { max-width: 520px; margin: 0 0 28px; font-size: clamp(30px, 4vw, 48px); font-weight: 500; line-height: 1.1; }
 .story-copy { max-width: 680px; color: #46524e; font-size: 18px; line-height: 1.8; }
 .story-copy p { margin: 0 0 18px; }
+.contact-details { display: grid; gap: 30px; max-width: 680px; }
+.contact-section h3 { margin: 0 0 12px; color: var(--green); font-size: 18px; }
+.contact-section address, .contact-section p { margin: 0; color: #46524e; font-size: 18px; line-height: 1.7; }
+.contact-section p { margin-top: 8px; }
+.social-links { display: flex; flex-wrap: wrap; gap: 18px; }
+.social-links a { display: inline-flex; align-items: center; gap: 9px; padding: 8px 0; color: var(--green); font-weight: 700; text-decoration: none; }
+.social-links a:hover, .social-links a:focus-visible { color: var(--terracotta); outline: 2px solid var(--terracotta); outline-offset: 4px; }
+.contact-logo { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--green); color: var(--paper); font-size: 17px; line-height: 1; }
+.contact-logo-instagram { font-size: 12px; letter-spacing: 0; }
 .loading-state { color: var(--muted); font-style: italic; }
 .error-state { max-width: 540px; padding: 18px 20px; border-left: 3px solid var(--terracotta); background: #fff1eb; color: #744532; line-height: 1.5; }
 .menu-actions { display: flex; gap: 12px; margin: 0 0 24px; }
