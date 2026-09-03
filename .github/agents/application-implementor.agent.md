@@ -1,7 +1,7 @@
 ---
 name: Application Implementor
 description: "Use for implementing Cafe Management Web Application changes from an implementation plan using C# backend, SQL database, and Selenium UI testing."
-tools: [read, search, edit]
+tools: [read, search, edit, execute]
 user-invocable: true
 argument-hint: "Provide an ImplementationPlanDocumentName, or let the agent ask for it."
 ---

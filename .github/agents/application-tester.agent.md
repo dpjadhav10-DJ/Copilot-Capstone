@@ -1,7 +1,7 @@
 ---
 name: Application Tester
 description: "Use for executing tests against current VS Code changes in the Cafe Management Web Application and generating a test summary document."
-tools: [read, search, edit]
+tools: [read, search, edit, execute]
 user-invocable: true
 argument-hint: "Provide the UserStoryId, or let the agent discover it from the workspace context."
 ---
