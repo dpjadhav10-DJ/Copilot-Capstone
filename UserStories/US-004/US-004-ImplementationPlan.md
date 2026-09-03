@@ -154,7 +154,7 @@ The calculation contract must be stable before the UI can safely display or muta
 
 - Navigate from the home page through the `Calculate Bill` link and verify the right content section.
 - Verify title, section headings, empty estimated table, zero total, Half default, item dropdown, and quantity choices.
-- Verify options are sourced from database menu rows and NA rows are not selectable.
+- Verify options are sourced from every database menu row, including selectable NA-only items.
 - Verify valid add and the approved Regular Coffee price/quantity example.
 - Verify multiple-line totals and separate duplicate rows.
 - Verify edit quantity, cancel edit, remove line, and empty-table total reset.

@@ -7,7 +7,7 @@
 
 ## Scope
 - Calculate Bill navigation from the home page right content region.
-- SQL-backed Half/Full menu options and trusted price calculation.
+- SQL-backed menu options for every database row and trusted price calculation.
 - Quantity selection from 1 through 10.
 - Add, quantity-only edit, remove, total recalculation, duplicate lines, and empty state.
 - Generate Bill and Discard Bill confirmation behavior.
@@ -43,6 +43,7 @@
 - Generate/Discard cancellation preserves state; Generate New Bill clears state.
 - Final bill output escapes database-sourced item names before HTML insertion.
 - Print controls call `window.print()` and print CSS hides navigation and actions.
+- Item dropdown groups all database rows by item name; NA-only items automatically use NA and disable irrelevant Half/Full choices.
 
 ### Runtime and Selenium execution
 - Result: Blocked in this session.

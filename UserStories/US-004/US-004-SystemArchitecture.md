@@ -29,7 +29,7 @@
 ### Approved assumptions and constraints
 - Bill state is transient in the browser and is owned by the Calculate Bill view. A browser refresh starts a new bill unless a later requirement explicitly adds persistence.
 - A menu record is identified by `MenuItemId`; its `ItemName`, `Portion`, and `Price` are loaded from SQL Server.
-- Existing `Half` and `Full` menu rows provide portion-specific prices. `NA` menu rows are not selectable for this story unless the product owner changes the rule.
+- Existing `Half`, `Full`, and `NA` menu rows provide selectable database-backed options. `NA` rows are treated as non-portioned items, with Half/Full controls disabled for them.
 - Duplicate additions create separate bill lines. This preserves each user action and avoids silently changing quantities; merging can be introduced later as a separate decision.
 - Quantity values are a fixed dropdown from 1 through 10 until a product owner specifies another range.
 - The current SQL seed price is authoritative for implementation and tests; Regular Coffee Half is 15 Rs in the seed data. The price displayed in a line is the selected portion's unit price. Amount is unit price multiplied by quantity, with two-decimal currency formatting.
@@ -103,12 +103,12 @@ BillState
 The total is derived from `lines` after every mutation rather than incremented/decremented independently. The displayed total is formatted from a decimal-safe calculation result; the browser must not use floating-point deltas as the authoritative value.
 
 ### Database use
-No new table is required for the approved transient design. Existing `dbo.MenuItem` supplies selectable rows and prices. The current schema allows `NA`; the bill-options query filters to `Half` and `Full` so unsupported rows cannot enter the bill through the normal UI.
+No new table is required for the approved transient design. Existing `dbo.MenuItem` supplies selectable rows and prices. The current schema allows `NA`; the bill-options query returns every row so all database menu items can enter the bill through the normal UI.
 
 ## 5. HTTP API Design
 
 ### `GET /api/menu/bill-options`
-Returns all active/selectable menu rows with `Portion IN ('Half', 'Full')`, ordered deterministically by item name, portion, and menu-item identifier. The endpoint returns the existing item/portion rows rather than grouping them, because each portion has an independent price.
+Returns every menu row, including `NA`, ordered deterministically by item name, portion, and menu-item identifier. The endpoint returns the existing item/portion rows rather than grouping them, because each row has an independent price.
 
 Responses:
 - `200 OK`: array of `BillMenuOption` records.
@@ -189,7 +189,7 @@ The final view invokes `window.print()` with print-specific CSS that hides appli
 Extend `MenuService` with a deterministic bill-options query and a specific menu-item/portion lookup, or introduce a `BillService` that calls a narrowly scoped MenuService method. Prefer a separate `BillService` for validation and calculation so bill rules are not embedded in endpoint lambdas.
 
 `BillService` responsibilities:
-- Validate `MenuItemId`, Half/Full portion, and quantity 1-10.
+- Validate `MenuItemId`, the selected database portion including `NA`, and quantity 1-10.
 - Retrieve the row by identifier and requested portion using parameterized SQL.
 - Return trusted item name, portion, price, quantity, and amount.
 - Use `decimal` for price and amount.
@@ -274,7 +274,7 @@ Provide selectors for:
 
 ### Risks
 - The source example says Half price 20 Rs, while the current seed script has Regular Coffee Half at 15 Rs. The confirmed implementation decision is to use the current SQL seed value of 15 Rs for implementation and tests.
-- The current menu schema permits `NA`; filtering it out for bill selection is an architecture assumption.
+- The current menu schema permits `NA`; all portions are included in bill selection and `NA` is handled as non-portioned.
 - Transient browser state is lost on refresh and is not shared across tabs.
 - Browser print-to-PDF depends on the user's browser print dialog and does not provide a direct file-download API.
 - Without authorization, any user who can access the app can calculate a bill; no bill data is persisted.

@@ -17,7 +17,7 @@ function showCalculateBill() {
   const quantity = document.querySelector('#bill-quantity');
   for (let value = 1; value <= 10; value += 1) quantity?.add(new Option(String(value), String(value)));
   document.querySelector('#bill-form')?.addEventListener('submit', event => void addBillLine(event));
-  document.querySelector('#bill-item')?.addEventListener('change', updateSelectedAmount);
+  document.querySelector('#bill-item')?.addEventListener('change', () => { updatePortionAvailability(); updateSelectedAmount(); });
   document.querySelector('#bill-quantity')?.addEventListener('change', updateSelectedAmount);
   document.querySelectorAll('input[name="bill-portion"]').forEach(input => input.addEventListener('change', updateSelectedAmount));
   document.querySelector('#generate-bill')?.addEventListener('click', generateBill);
@@ -44,7 +44,8 @@ async function loadBillOptions() {
   }
 }
 
-function selectedPortion() { return document.querySelector('input[name="bill-portion"]:checked')?.value ?? 'Half'; }
+function selectedPortion() { const selectedItem = document.querySelector('#bill-item')?.value; const itemOptions = billOptions.filter(option => option.itemName === selectedItem); if (itemOptions.length > 0 && itemOptions.every(option => option.portion === 'NA')) return 'NA'; return document.querySelector('input[name="bill-portion"]:checked')?.value ?? 'Half'; }
+function updatePortionAvailability() { const selectedItem = document.querySelector('#bill-item')?.value; const itemOptions = billOptions.filter(option => option.itemName === selectedItem); const hasPortions = itemOptions.some(option => option.portion === 'Half' || option.portion === 'Full'); document.querySelectorAll('input[name="bill-portion"]').forEach(input => { input.disabled = !hasPortions; }); }
 function updateSelectedAmount() {
   const select = document.querySelector('#bill-item');
   const amount = document.querySelector('#bill-amount');

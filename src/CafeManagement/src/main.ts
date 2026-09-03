@@ -4,7 +4,7 @@ type CafeStory = {
 
 type MenuItem = { menuItemId: number; itemName: string; portion: string; price: number };
 type MenuPage = { items: MenuItem[]; totalCount: number; page: number; pageSize: number };
-type BillOption = { menuItemId: number; itemName: string; portion: 'Half' | 'Full'; price: number };
+type BillOption = { menuItemId: number; itemName: string; portion: 'Half' | 'Full' | 'NA'; price: number };
 type BillLine = BillOption & { lineId: number; quantity: number; amount: number };
 
 const storyContent = document.querySelector<HTMLElement>('#story-content');
@@ -34,7 +34,7 @@ function showCalculateBill(): void {
   const quantity = document.querySelector<HTMLSelectElement>('#bill-quantity');
   for (let value = 1; value <= 10; value += 1) quantity?.add(new Option(String(value), String(value)));
   document.querySelector<HTMLFormElement>('#bill-form')?.addEventListener('submit', event => void addBillLine(event));
-  document.querySelector<HTMLSelectElement>('#bill-item')?.addEventListener('change', updateSelectedAmount);
+  document.querySelector<HTMLSelectElement>('#bill-item')?.addEventListener('change', () => { updatePortionAvailability(); updateSelectedAmount(); });
   document.querySelector<HTMLSelectElement>('#bill-quantity')?.addEventListener('change', updateSelectedAmount);
   document.querySelectorAll<HTMLInputElement>('input[name="bill-portion"]').forEach(input => input.addEventListener('change', updateSelectedAmount));
   document.querySelector<HTMLButtonElement>('#generate-bill')?.addEventListener('click', generateBill);
@@ -61,8 +61,18 @@ async function loadBillOptions(): Promise<void> {
   }
 }
 
-function selectedPortion(): 'Half' | 'Full' {
+function selectedPortion(): 'Half' | 'Full' | 'NA' {
+  const selectedItem = document.querySelector<HTMLSelectElement>('#bill-item')?.value;
+  const itemOptions = billOptions.filter(option => option.itemName === selectedItem);
+  if (itemOptions.length > 0 && itemOptions.every(option => option.portion === 'NA')) return 'NA';
   return document.querySelector<HTMLInputElement>('input[name="bill-portion"]:checked')?.value as 'Half' | 'Full' ?? 'Half';
+}
+
+function updatePortionAvailability(): void {
+  const selectedItem = document.querySelector<HTMLSelectElement>('#bill-item')?.value;
+  const itemOptions = billOptions.filter(option => option.itemName === selectedItem);
+  const hasPortions = itemOptions.some(option => option.portion === 'Half' || option.portion === 'Full');
+  document.querySelectorAll<HTMLInputElement>('input[name="bill-portion"]').forEach(input => { input.disabled = !hasPortions; });
 }
 
 function updateSelectedAmount(): void {

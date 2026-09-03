@@ -5,7 +5,7 @@ namespace CafeManagement.Services;
 
 public sealed class BillService(IConfiguration configuration)
 {
-    private static readonly string[] AllowedPortions = ["Half", "Full"];
+    private static readonly string[] AllowedPortions = ["Half", "Full", "NA"];
     private const int MinimumQuantity = 1;
     private const int MaximumQuantity = 10;
 
@@ -20,7 +20,6 @@ public sealed class BillService(IConfiguration configuration)
         command.CommandText = """
             SELECT MenuItemId, ItemName, Portion, Price
             FROM dbo.MenuItem
-            WHERE Portion IN (N'Half', N'Full')
             ORDER BY ItemName, Portion, MenuItemId;
             """;
 
@@ -39,7 +38,7 @@ public sealed class BillService(IConfiguration configuration)
     {
         var errors = new Dictionary<string, string[]>();
         if (request.MenuItemId <= 0) errors["menuItemId"] = ["Select a valid menu item."];
-        if (request.Portion is null || !AllowedPortions.Contains(request.Portion)) errors["portion"] = ["Portion must be Half or Full."];
+        if (request.Portion is null || !AllowedPortions.Contains(request.Portion)) errors["portion"] = ["Portion must be Half, Full, or NA."];
         if (request.Quantity is < MinimumQuantity or > MaximumQuantity) errors["quantity"] = [$"Quantity must be between {MinimumQuantity} and {MaximumQuantity}."];
         if (errors.Count > 0) return (null, errors, false);
 
