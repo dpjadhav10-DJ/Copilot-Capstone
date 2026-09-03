@@ -1,7 +1,6 @@
 "use strict";
-const storyContent = document.querySelector('#story-content');
-const storyError = document.querySelector('#story-error');
 const storyPanel = document.querySelector('.story-panel');
+const homeLink = document.querySelector('[data-testid="nav-home"]');
 const menuLink = document.querySelector('#menu-link');
 const calculateBillLink = document.querySelector('#calculate-bill-link');
 const contactLink = document.querySelector('[data-testid="nav-contact"]');
@@ -16,6 +15,15 @@ function escapeHtml(value) {
 }
 function calculateTotal() {
     return billLines.reduce((total, line) => total + Math.round(line.amount * 100), 0) / 100;
+}
+function showHome() {
+    if (!storyPanel)
+        return;
+    storyPanel.innerHTML = '<div class="section-kicker">Story of a cafe</div><h2 id="story-heading">Pull up a chair.</h2><div id="story-content" class="story-copy" data-testid="story-content" aria-live="polite"><p class="loading-state">Pouring the first cup...</p></div><div id="story-error" class="error-state" data-testid="story-error" hidden>The cafe story is taking a quiet moment. Please try again soon.</div>';
+    const storyContent = storyPanel.querySelector('#story-content');
+    const storyError = storyPanel.querySelector('#story-error');
+    if (storyContent && storyError)
+        void loadStory(storyContent, storyError);
 }
 function showCalculateBill() {
     if (!storyPanel)
@@ -301,30 +309,37 @@ async function saveMenu(event) {
         errors.hidden = false;
     }
 }
-function renderStory(story) {
-    if (!storyContent)
-        return;
+function renderStory(story, storyContent) {
     storyContent.replaceChildren(...story.storyText.split('\n\n').map((paragraph) => {
         const element = document.createElement('p');
         element.textContent = paragraph;
         return element;
     }));
 }
-async function loadStory() {
+function isActiveHomeView(storyContent, storyError) {
+    return Boolean(storyPanel?.contains(storyContent) && storyPanel.contains(storyError));
+}
+async function loadStory(storyContent, storyError) {
     try {
         const response = await fetch('/api/cafe-story/active');
         if (!response.ok)
             throw new Error(`Story request failed: ${response.status}`);
-        renderStory(await response.json());
+        const story = await response.json();
+        if (isActiveHomeView(storyContent, storyError))
+            renderStory(story, storyContent);
     }
     catch {
-        if (storyContent)
-            storyContent.hidden = true;
-        if (storyError)
-            storyError.hidden = false;
+        if (!isActiveHomeView(storyContent, storyError))
+            return;
+        storyContent.hidden = true;
+        storyError.hidden = false;
     }
 }
-void loadStory();
+const initialStoryContent = storyPanel?.querySelector('#story-content');
+const initialStoryError = storyPanel?.querySelector('#story-error');
+if (initialStoryContent && initialStoryError)
+    void loadStory(initialStoryContent, initialStoryError);
+homeLink?.addEventListener('click', event => { event.preventDefault(); showHome(); });
 menuLink?.addEventListener('click', event => { event.preventDefault(); showMenu(); });
 calculateBillLink?.addEventListener('click', event => { event.preventDefault(); showCalculateBill(); });
 contactLink?.addEventListener('click', event => { event.preventDefault(); showContactUs(); });

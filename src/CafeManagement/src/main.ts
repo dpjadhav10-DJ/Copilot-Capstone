@@ -7,9 +7,8 @@ type MenuPage = { items: MenuItem[]; totalCount: number; page: number; pageSize:
 type BillOption = { menuItemId: number; itemName: string; portion: 'Half' | 'Full' | 'NA'; price: number };
 type BillLine = BillOption & { lineId: number; quantity: number; amount: number };
 
-const storyContent = document.querySelector<HTMLElement>('#story-content');
-const storyError = document.querySelector<HTMLElement>('#story-error');
 const storyPanel = document.querySelector<HTMLElement>('.story-panel');
+const homeLink = document.querySelector<HTMLAnchorElement>('[data-testid="nav-home"]');
 const menuLink = document.querySelector<HTMLAnchorElement>('#menu-link');
 const calculateBillLink = document.querySelector<HTMLAnchorElement>('#calculate-bill-link');
 const contactLink = document.querySelector<HTMLAnchorElement>('[data-testid="nav-contact"]');
@@ -27,6 +26,14 @@ function escapeHtml(value: string): string {
 
 function calculateTotal(): number {
   return billLines.reduce((total, line) => total + Math.round(line.amount * 100), 0) / 100;
+}
+
+function showHome(): void {
+  if (!storyPanel) return;
+  storyPanel.innerHTML = '<div class="section-kicker">Story of a cafe</div><h2 id="story-heading">Pull up a chair.</h2><div id="story-content" class="story-copy" data-testid="story-content" aria-live="polite"><p class="loading-state">Pouring the first cup...</p></div><div id="story-error" class="error-state" data-testid="story-error" hidden>The cafe story is taking a quiet moment. Please try again soon.</div>';
+  const storyContent = storyPanel.querySelector<HTMLElement>('#story-content');
+  const storyError = storyPanel.querySelector<HTMLElement>('#story-error');
+  if (storyContent && storyError) void loadStory(storyContent, storyError);
 }
 
 function showCalculateBill(): void {
@@ -273,8 +280,7 @@ async function saveMenu(event: SubmitEvent): Promise<void> {
   if (errors) { errors.textContent = response.status === 400 ? 'Please enter a valid item name, portion, and non-negative price.' : 'The menu item could not be saved.'; errors.hidden = false; }
 }
 
-function renderStory(story: CafeStory): void {
-  if (!storyContent) return;
+function renderStory(story: CafeStory, storyContent: HTMLElement): void {
   storyContent.replaceChildren(
     ...story.storyText.split('\n\n').map((paragraph) => {
       const element = document.createElement('p');
@@ -284,18 +290,27 @@ function renderStory(story: CafeStory): void {
   );
 }
 
-async function loadStory(): Promise<void> {
+function isActiveHomeView(storyContent: HTMLElement, storyError: HTMLElement): boolean {
+  return Boolean(storyPanel?.contains(storyContent) && storyPanel.contains(storyError));
+}
+
+async function loadStory(storyContent: HTMLElement, storyError: HTMLElement): Promise<void> {
   try {
     const response = await fetch('/api/cafe-story/active');
     if (!response.ok) throw new Error(`Story request failed: ${response.status}`);
-    renderStory(await response.json() as CafeStory);
+    const story = await response.json() as CafeStory;
+    if (isActiveHomeView(storyContent, storyError)) renderStory(story, storyContent);
   } catch {
-    if (storyContent) storyContent.hidden = true;
-    if (storyError) storyError.hidden = false;
+    if (!isActiveHomeView(storyContent, storyError)) return;
+    storyContent.hidden = true;
+    storyError.hidden = false;
   }
 }
 
-void loadStory();
+const initialStoryContent = storyPanel?.querySelector<HTMLElement>('#story-content');
+const initialStoryError = storyPanel?.querySelector<HTMLElement>('#story-error');
+if (initialStoryContent && initialStoryError) void loadStory(initialStoryContent, initialStoryError);
+homeLink?.addEventListener('click', event => { event.preventDefault(); showHome(); });
 menuLink?.addEventListener('click', event => { event.preventDefault(); showMenu(); });
 calculateBillLink?.addEventListener('click', event => { event.preventDefault(); showCalculateBill(); });
 contactLink?.addEventListener('click', event => { event.preventDefault(); showContactUs(); });
