@@ -62,6 +62,7 @@ Maintain these values throughout the workflow:
 - Wait for the agent to finish.
 - Capture the returned requirement analysis document name in:
   - `RequirementAnalysisDocument`
+- Display status, captured document name and wait for user confirmation before proceeding.
 
 ### Step 2 — System Architecture Creator
 - Invoke the **System Architecture Creator** agent.
@@ -69,11 +70,13 @@ Maintain these values throughout the workflow:
 - Wait for the agent to finish.
 - Capture the returned architecture document name in:
   - `SystemArchitectureDocument`
+- Display status, captured document name and wait for user confirmation before proceeding.
 
 ### Step 3 — Design Reviewer
 - Invoke the **Design Reviewer** agent.
 - Pass `SystemArchitectureDocument`.
 - Wait for the agent to finish.
+- Display status and wait for user confirmation before proceeding.
 
 ### Step 4 — Implementation Planner
 - Invoke the **Implementation Planner** agent.
@@ -81,6 +84,7 @@ Maintain these values throughout the workflow:
 - Wait for the agent to finish.
 - Capture the returned implementation plan document name in:
   - `ImplementationPlanDocument`
+- Display status, captured document name and wait for user confirmation before proceeding.
 
 ### Step 5 — Application Implementor
 - Invoke the **Application Implementor** agent.
@@ -88,6 +92,7 @@ Maintain these values throughout the workflow:
 - Wait for the agent to finish.
 - If the agent asks for confirmation or another missing input, ask the user and wait.
 - Do not proceed until the agent completes successfully or returns a terminal status.
+- Display status and wait for user confirmation before proceeding.
 
 ### Step 6 — Code Reviewer
 - Invoke the **Code Reviewer** agent.
@@ -100,12 +105,14 @@ Maintain these values throughout the workflow:
 - Wait for the agent to finish.
 - Capture the returned test summary document name in:
   - `TestSummaryDocument`
+- Display status, captured document name and wait for user confirmation before proceeding.
 
 ### Step 8 — Changes Publisher
 - Invoke the **Changes Publisher** agent.
 - Wait for the agent to finish.
 - Capture the returned pull request link in:
   - `PullRequest`
+- Display status and Pull Request Link
 
 ## Step Completion Requirements
 Before moving to the next step, verify that:
