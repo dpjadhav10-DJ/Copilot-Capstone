@@ -12,7 +12,11 @@ Requirements:
 2. Remove the link "Locate Us" from the home page as of now, we will add it later whenever required.
 - There should not be any UI Distortion occur due to this link removal.
 
-3. Do follow the existing theme, color sheme and design of an application.
+3. Implement the functionality that,
+- Change "Explore" label in Left Panel to "Home"
+- Change that text to link and when you click on that link from any page in the application, home page contents should be displayed.
+
+4. Do follow the existing theme, color sheme and design of an applicati1on.
 
 Definition of done:
 1. Link text rename and removal should not cause any kind of functional breakdown or flow break down of an application.
