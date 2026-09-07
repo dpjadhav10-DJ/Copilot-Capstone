@@ -1,0 +1,3 @@
+#!/bin/sh
+set -eu
+pwsh -NoProfile -File .github/scripts/pre-push-validation.ps1
