@@ -1,0 +1,20 @@
+User Story Id: US-007
+
+User Story Title: Addition of User Management Menu on the application pages
+
+Description: Addition of Placeholder User Management Menu on the application pages for the future use.
+
+Requirements:
+1. Add new Left Panel Menu as "User Management"
+- Text: "User Management"
+- When clicked on newly added Left Panel menu it should expand 2 submenu as "Add User" and "Search User".
+- When clicked on newly added submenu "Add User" and "Search User", a future development message should be displayed in right side content panel.
+- Application should not go to broken state and even no broken page should be opened.
+- Empty page with proper message should be displayed when clicked on new links.
+
+2. Do follow the existing theme, color scheme and design of an application.
+
+Definition of done:
+1. Links should be visible in all the pages of the Application.
+2. Links should not be clickable.
+3. No broken pages or undesirable state for an application.
