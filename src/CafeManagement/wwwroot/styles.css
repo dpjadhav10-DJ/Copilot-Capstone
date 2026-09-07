@@ -27,8 +27,9 @@ h1 { margin: 0; color: var(--paper); font-family: 'Pacifico', cursive; font-size
 .side-panel a, .user-management > button, .user-management-submenu button { width: fit-content; padding: 8px 0; color: var(--ink); font-size: 14px; font-family: inherit; font-weight: 400; line-height: normal; text-align: left; text-decoration: none; border: 0; border-bottom: 1px solid transparent; background: transparent; }
 .side-panel a:hover, .side-panel a:focus-visible { color: var(--terracotta); border-bottom-color: var(--terracotta); outline: none; }
 .user-management { display: grid; gap: 4px; }
-.user-management > button::after { content: '+'; display: inline-block; margin-left: 8px; color: currentColor; font-size: 13px; font-weight: 700; line-height: 1; }
-.user-management > button[aria-expanded='true']::after { content: '-'; }
+.disclosure-indicator { display: inline-block; margin-left: 8px; color: currentColor; font-size: 13px; font-weight: 700; line-height: 1; }
+.disclosure-indicator::before { content: '+'; }
+.user-management > button[aria-expanded='true'] .disclosure-indicator::before { content: '-'; }
 .user-management > button:hover, .user-management > button:focus-visible, .user-management-submenu button:hover, .user-management-submenu button:focus-visible { color: var(--terracotta); outline: 2px solid var(--terracotta); outline-offset: 3px; }
 .user-management-submenu { display: grid; gap: 2px; padding-left: 14px; border-left: 1px solid var(--line); }
 .side-note { margin-top: auto; color: var(--green); font-family: 'Pacifico', cursive; font-size: 16px; line-height: 1.5; }
