@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/styles.css?v=007">
 </head>
 <body>
   <main class="page-shell" data-testid="home-page">
@@ -29,7 +29,7 @@
         <a href="#menu" id="menu-link" data-testid="nav-menu">Add/Remove Cafe Menu</a>
         <a href="#contact-us" data-testid="nav-contact">Reach Us At</a>
         <div class="user-management">
-          <button type="button" data-testid="nav-user-management" aria-expanded="false" aria-controls="user-management-submenu">User Management</button>
+          <button type="button" data-testid="nav-user-management" aria-expanded="false" aria-controls="user-management-submenu">User Management <span class="disclosure-indicator" aria-hidden="true"></span></button>
           <div id="user-management-submenu" class="user-management-submenu" data-testid="user-management-submenu" hidden>
             <button type="button" data-testid="nav-add-user">Add User</button>
             <button type="button" data-testid="nav-search-user">Search User</button>
@@ -51,6 +51,6 @@
     </div>
     <footer class="application-footer" data-testid="application-footer">All the rights reserved for the cafe to the management.</footer>
   </main>
-  <script type="module" src="/main.js"></script>
+  <script type="module" src="/main.js?v=007"></script>
 </body>
 </html>

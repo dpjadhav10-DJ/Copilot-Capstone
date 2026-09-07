@@ -74,7 +74,8 @@ public sealed class HomePageTests
         userManagement.SendKeys(Keys.Enter);
         Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("true"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Null);
-        Assert.That(GetDisclosureIndicator(userManagement), Is.EqualTo("\"-\""));
+        var disclosureIndicator = userManagement.FindElement(By.CssSelector(".disclosure-indicator"));
+        Assert.That(GetDisclosureIndicator(disclosureIndicator), Is.EqualTo("\"-\""));
         Assert.That(submenu.Text, Is.EqualTo("Add User\r\nSearch User").Or.EqualTo("Add User\nSearch User"));
         Assert.That(_driver.FindElements(By.CssSelector("[data-testid='navigation'] a")), Has.Count.EqualTo(4));
         var submenuButton = _driver.FindElement(By.CssSelector("[data-testid='nav-add-user']"));
@@ -91,6 +92,7 @@ public sealed class HomePageTests
 
         _driver.FindElement(By.CssSelector("[data-testid='nav-search-user']")).SendKeys(Keys.Enter);
         wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='search-user-placeholder']")).Displayed);
+        Assert.That(_driver.Url, Is.EqualTo(initialUrl));
         Assert.That(_driver.FindElement(By.CssSelector("[data-testid='search-user-placeholder']")).Text, Is.EqualTo("Search User is reserved for future development."));
         AssertAccessibleStoryPanel("Search User");
         Assert.That(_driver.FindElements(By.CssSelector("[data-testid='add-user-placeholder']")), Is.Empty);
@@ -108,9 +110,11 @@ public sealed class HomePageTests
         Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("true"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Null);
 
-        userManagement.SendKeys(Keys.Space);
+        var disclosureIndicator = userManagement.FindElement(By.CssSelector(".disclosure-indicator"));
+        disclosureIndicator.Click();
         Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("false"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Not.Null);
+        Assert.That(GetDisclosureIndicator(disclosureIndicator), Is.EqualTo("\"+\""));
     }
 
     [Test]
@@ -330,8 +334,9 @@ public sealed class HomePageTests
         Assert.That(controlStyle, Is.EqualTo(linkStyle));
     }
 
-    private string GetDisclosureIndicator(IWebElement userManagement)
+    private string GetDisclosureIndicator(IWebElement disclosureIndicator)
     {
-        return (string)((IJavaScriptExecutor)_driver).ExecuteScript("return getComputedStyle(arguments[0], '::after').content;", userManagement);
+        return (string)((IJavaScriptExecutor)_driver).ExecuteScript("return getComputedStyle(arguments[0], '::before').content;", disclosureIndicator);
     }
+
 }
