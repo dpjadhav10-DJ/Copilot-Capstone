@@ -1,7 +1,7 @@
 ---
 name: Code Reviewer
 description: "Use for reviewing current code changes in the Cafe Management Web Application, previewing proposed changes, and implementing them only after explicit confirmation. Covers C# backend, SQL database, and Selenium UI testing."
-tools: [read, search, edit]
+tools: [read, search, edit, execute]
 user-invocable: true
 argument-hint: "Provide the current change context or let the agent inspect the workspace changes."
 ---

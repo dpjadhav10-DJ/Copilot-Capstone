@@ -1,7 +1,7 @@
 ---
 name: Changes Publisher
 description: "Use for committing validated Cafe Management Web Application changes, publishing the branch, and creating a pull request to merge into main."
-tools: [read, search, edit, execute]
+tools: [read, search, execute]
 user-invocable: true
 argument-hint: "Provide the target branch or let the agent inspect the current workspace changes."
 ---
@@ -58,11 +58,13 @@ Follow these steps in order and do not skip any:
    - Use a professional, descriptive commit message.
    - Include only intended files.
    - Exclude unrelated or temporary files.
+   - Before committing, inspect staged files, run `git diff --cached --check`, and check for secrets and generated output.
    - Commit only the files explicitly approved in the preview.
    - Do not create an empty commit when all intended changes are already committed.
    - If uncommitted changes are not ready or their scope is unclear, stop and ask for clarification.
 
 6. **Publish the branch after confirmation**
+   - Before pushing, run the applicable build and test checks and report any failure or limitation.
    - Push the commit(s) to the remote branch.
    - If the branch and commit are already up to date on the remote, report that push is already complete and continue to PR discovery.
    - Confirm push success from command output.
