@@ -91,6 +91,7 @@ public sealed class HomePageTests
 
         _driver.FindElement(By.CssSelector("[data-testid='nav-search-user']")).SendKeys(Keys.Enter);
         wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='search-user-placeholder']")).Displayed);
+        Assert.That(_driver.Url, Is.EqualTo(initialUrl));
         Assert.That(_driver.FindElement(By.CssSelector("[data-testid='search-user-placeholder']")).Text, Is.EqualTo("Search User is reserved for future development."));
         AssertAccessibleStoryPanel("Search User");
         Assert.That(_driver.FindElements(By.CssSelector("[data-testid='add-user-placeholder']")), Is.Empty);
