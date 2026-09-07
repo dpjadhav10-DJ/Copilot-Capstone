@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -64,14 +65,21 @@ public sealed class HomePageTests
 
         Assert.That(userManagement.TagName, Is.EqualTo("button"));
         Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("false"));
+        Assert.That(userManagement.GetAttribute("aria-controls"), Is.EqualTo("user-management-submenu"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Not.Null);
         Assert.That(submenu.FindElements(By.CssSelector("button")), Has.Count.EqualTo(2));
+        AssertPlainSidePanelLinkStyle(userManagement, _driver.FindElement(By.CssSelector("[data-testid='nav-home']")));
+        Assert.That(_driver.FindElement(By.CssSelector("[data-testid='nav-add-user']")).TagName, Is.EqualTo("button"));
 
         userManagement.SendKeys(Keys.Enter);
         Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("true"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Null);
+        Assert.That(GetDisclosureIndicator(userManagement), Is.EqualTo("\"-\""));
         Assert.That(submenu.Text, Is.EqualTo("Add User\r\nSearch User").Or.EqualTo("Add User\nSearch User"));
         Assert.That(_driver.FindElements(By.CssSelector("[data-testid='navigation'] a")), Has.Count.EqualTo(4));
+        var submenuButton = _driver.FindElement(By.CssSelector("[data-testid='nav-add-user']"));
+        AssertPlainSidePanelLinkStyle(submenuButton, _driver.FindElement(By.CssSelector("[data-testid='nav-home']")));
+        Assert.That((bool)((IJavaScriptExecutor)_driver).ExecuteScript("return arguments[0].getBoundingClientRect().left > arguments[1].getBoundingClientRect().left;", submenuButton, userManagement), Is.True);
 
         _driver.FindElement(By.CssSelector("[data-testid='nav-add-user']")).SendKeys(Keys.Enter);
         wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='add-user-placeholder']")).Displayed);
@@ -311,5 +319,19 @@ public sealed class HomePageTests
         var headingId = storyPanel.GetAttribute("aria-labelledby");
         Assert.That(headingId, Is.EqualTo("story-heading"));
         Assert.That(_driver.FindElement(By.Id(headingId)).Text, Is.EqualTo(expectedHeading));
+    }
+
+    private void AssertPlainSidePanelLinkStyle(IWebElement control, IWebElement link)
+    {
+        var script = (IJavaScriptExecutor)_driver;
+        var linkStyle = (Dictionary<string, object>)script.ExecuteScript("const style = getComputedStyle(arguments[0]); return { color: style.color, fontFamily: style.fontFamily, fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight, textDecoration: style.textDecorationLine, background: style.backgroundColor };", link);
+        var controlStyle = (Dictionary<string, object>)script.ExecuteScript("const style = getComputedStyle(arguments[0]); return { color: style.color, fontFamily: style.fontFamily, fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight, textDecoration: style.textDecorationLine, background: style.backgroundColor };", control);
+
+        Assert.That(controlStyle, Is.EqualTo(linkStyle));
+    }
+
+    private string GetDisclosureIndicator(IWebElement userManagement)
+    {
+        return (string)((IJavaScriptExecutor)_driver).ExecuteScript("return getComputedStyle(arguments[0], '::after').content;", userManagement);
     }
 }

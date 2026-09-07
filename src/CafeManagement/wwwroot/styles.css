@@ -24,14 +24,13 @@ h1 { margin: 0; color: var(--paper); font-family: 'Pacifico', cursive; font-size
 .content-grid { display: grid; grid-template-columns: 250px 1fr; min-height: 440px; background: var(--paper); }
 .application-footer { padding: 18px 24px; background: var(--sage); color: var(--green); font-family: 'DM Sans', sans-serif; font-size: 13px; font-style: italic; line-height: 1.5; text-align: center; }
 .side-panel { display: flex; flex-direction: column; gap: 7px; padding: 48px 34px; border-right: 1px solid var(--line); background: var(--sage); }
-.side-panel a { width: fit-content; padding: 8px 0; color: var(--ink); font-size: 14px; text-decoration: none; border-bottom: 1px solid transparent; }
+.side-panel a, .user-management > button, .user-management-submenu button { width: fit-content; padding: 8px 0; color: var(--ink); font-size: 14px; font-family: inherit; font-weight: 400; line-height: normal; text-align: left; text-decoration: none; border: 0; border-bottom: 1px solid transparent; background: transparent; }
 .side-panel a:hover, .side-panel a:focus-visible { color: var(--terracotta); border-bottom-color: var(--terracotta); outline: none; }
 .user-management { display: grid; gap: 4px; }
-.user-management > button, .user-management-submenu button { width: fit-content; padding: 8px 0; background: transparent; color: var(--ink); text-align: left; }
-.user-management > button { font-size: 14px; }
+.user-management > button::after { content: '+'; display: inline-block; margin-left: 8px; color: currentColor; font-size: 13px; font-weight: 700; line-height: 1; }
+.user-management > button[aria-expanded='true']::after { content: '-'; }
 .user-management > button:hover, .user-management > button:focus-visible, .user-management-submenu button:hover, .user-management-submenu button:focus-visible { color: var(--terracotta); outline: 2px solid var(--terracotta); outline-offset: 3px; }
 .user-management-submenu { display: grid; gap: 2px; padding-left: 14px; border-left: 1px solid var(--line); }
-.user-management-submenu button { font-size: 13px; }
 .side-note { margin-top: auto; color: var(--green); font-family: 'Pacifico', cursive; font-size: 16px; line-height: 1.5; }
 .story-panel { padding: 58px 68px; }
 .story-panel h2 { max-width: 520px; margin: 0 0 28px; font-size: clamp(30px, 4vw, 48px); font-weight: 500; line-height: 1.1; }
