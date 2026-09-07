@@ -3,18 +3,18 @@
 ## 1. Source and Summary
 - User story reference: US-007, Addition of User Management Menu on the application pages.
 - Source architecture document: `UserStories/US-007/US-007-SystemArchitecture.md`
-- Plan objective: Add a persistent User Management navigation group with accessible button-driven expansion and client-rendered future-development placeholders while preserving the existing application shell and behavior.
-- Approved interaction scope: User Management expands and collapses by click or native keyboard activation. Add User and Search User are activatable in-page, non-anchor controls that render the exact approved messages in `.story-panel`.
+- Plan objective: Add a persistent User Management navigation group with synchronized accessible expansion state and future-development placeholder presentation while preserving the existing application shell and behavior.
+- Approved interaction scope: User Management expands and collapses by pointer click or native keyboard activation. Submenu visibility, `aria-expanded`, and plus/minus icon state must update synchronously. Add User and Search User control semantics, message wording, and URL behavior remain implementation prerequisites until explicitly resolved.
 - Solution scope summary: Update the existing static shell, TypeScript source, synchronized compiled browser artifact, and responsive styles; add focused Selenium coverage. No C# backend, API, SQL, persistence, authentication, or authorization changes are planned.
 
 ## 2. Implementation Strategy
 
 ### Delivery approach
-Extend the existing .NET-hosted static single-page shell in place. Add the User Management button and submenu to `wwwroot/index.html`, implement expansion and placeholder rendering in `src/main.ts`, run the existing TypeScript build so `wwwroot/main.js` remains synchronized, and make only focused responsive/theme adjustments in `wwwroot/styles.css`. Add stable Selenium coverage in the existing NUnit test project after the UI behavior is implemented.
+Extend the existing .NET-hosted static single-page shell in place. Add the User Management group, stable selectors, and submenu to `wwwroot/index.html`, implement synchronized expansion state and the resolved placeholder presentation in `src/main.ts`, run the existing TypeScript build so `wwwroot/main.js` remains synchronized, and make only focused responsive/theme adjustments in `wwwroot/styles.css`. Add focused Selenium regression coverage in the existing NUnit test project after the UI behavior is implemented.
 
 ### Sequencing rationale
-1. Establish persistent semantic navigation markup and stable selectors without adding anchors or routes.
-2. Implement the observable expansion state and keyboard-capable placeholder controls in the TypeScript source.
+1. Establish persistent navigation markup and stable selectors without changing the existing navigation-anchor contract.
+2. Implement pointer and native keyboard expansion with submenu visibility, `aria-expanded`, and plus/minus icon state kept synchronized in the TypeScript source.
 3. Build TypeScript and confirm the generated `wwwroot/main.js` matches the source output.
 4. Preserve the existing theme, shell, footer, and responsive layout with focused CSS changes only.
 5. Add and execute Selenium coverage for behavior, accessibility, no-navigation/no-request semantics, persistence, regression, and the narrow viewport.
@@ -30,28 +30,27 @@ Extend the existing .NET-hosted static single-page shell in place. Add the User 
 ### Assumptions and constraints
 - User Management is a persistent navigation group visible on all existing application views.
 - The submenu is collapsed initially and exposes exactly Add User and Search User when expanded.
-- The top-level control uses an observable accessible state such as `aria-expanded` and `aria-controls`; native button keyboard behavior is retained.
-- Add User and Search User use in-page button or equivalent non-anchor controls and do not change the URL, browser history, or route.
+- The top-level control uses `aria-expanded`, an optional confirmed `aria-controls` relationship, and a stable icon selector; native keyboard activation is retained.
+- Add User and Search User control semantics, placeholder message wording, and URL behavior are unresolved prerequisites and must be confirmed before implementation and tests are finalized.
 - Placeholder activation replaces only `.story-panel` content and leaves the navigation, page shell, and footer present exactly once.
-- The exact messages are `Add User is reserved for future development.` and `Search User is reserved for future development.`
 - The current 700-pixel media-query breakpoint remains the narrow-layout boundary.
-- No new router, URL/hash contract, runtime dependency, API, persistence, user-management model, authentication, or authorization behavior is introduced.
+- The feature remains presentation-only: no new router, URL/hash contract, runtime dependency, API, persistence, user-management model, authentication, or authorization behavior is introduced.
 
 ## 3. Step-by-Step Implementation Tasks
 
 ### TASK-001: Add persistent User Management markup
-- Description: Add a persistent User Management navigation group to `wwwroot/index.html` with the exact `User Management` label, a button selector `data-testid="nav-user-management"`, an initially collapsed submenu selector `data-testid="user-management-submenu"`, and exactly the Add User and Search User controls with selectors `nav-add-user` and `nav-search-user`.
+- Description: Add a persistent User Management navigation group to `wwwroot/index.html` with the exact `User Management` label, stable selectors for the group and toggle, an initially collapsed submenu selector `data-testid="user-management-submenu"`, and exactly the Add User and Search User entries with selectors `nav-add-user` and `nav-search-user`.
 - Primary layer impacted: HTML presentation layer.
 - Dependencies: Existing persistent navigation and page-shell structure.
 - Expected outcome: User Management is present on initial load and remains outside the replaceable `.story-panel`; the four existing navigation anchors remain unchanged.
-- Notes or risks: Do not implement the new controls as anchors, add unsupported hrefs, or introduce additional submenu entries. Preserve the existing footer position and shell structure.
+- Notes or risks: Preserve the existing four-anchor navigation contract and do not add unsupported hrefs or routes. Keep the final Add User and Search User control semantics aligned with the approved prerequisite decision. Preserve the existing footer position and shell structure.
 
 ### TASK-002: Implement accessible expansion and placeholder rendering
-- Description: In `src/main.ts`, wire the User Management button to toggle submenu visibility/state on click and native keyboard activation, keeping `aria-expanded` and `aria-controls` or an equivalent observable DOM state synchronized. Handle Add User and Search User as in-page controls that render the exact approved messages inside `.story-panel` using stable placeholder selectors.
+- Description: In `src/main.ts`, wire the User Management toggle to pointer click and native keyboard activation, keeping submenu visibility, `aria-expanded`, and plus/minus icon state synchronized. Implement the resolved Add User and Search User placeholder semantics and wording inside `.story-panel` using stable placeholder selectors.
 - Primary layer impacted: TypeScript presentation behavior.
 - Dependencies: TASK-001 and existing renderer/event-handling conventions.
-- Expected outcome: The submenu expands and collapses without navigation; each placeholder renders only its corresponding message and remains client-side and transient.
-- Notes or risks: Avoid duplicate listeners during repeated view transitions. Do not submit forms, change URL/history, call a user-management endpoint, persist data, or allow unsupported routes. Preserve existing Home, Calculate Bill, Add/Remove Cafe Menu, Reach Us At, and footer behavior.
+- Expected outcome: The submenu expands and collapses through the approved pointer and keyboard interactions, with visibility, `aria-expanded`, and icon state synchronized; each placeholder follows the resolved presentation rule.
+- Notes or risks: Avoid duplicate listeners during repeated view transitions. Keep the implementation presentation-only and do not add user-management requests, persistence, authentication, authorization, or unsupported routes. Apply the resolved URL behavior without inventing a contract. Preserve existing Home, Calculate Bill, Add/Remove Cafe Menu, Reach Us At, and footer behavior.
 
 ### TASK-003: Build and synchronize the browser artifact
 - Description: Run the existing TypeScript build from `src/CafeManagement` and verify the emitted `wwwroot/main.js` is synchronized with `src/main.ts` according to `tsconfig.json` output.
@@ -68,10 +67,10 @@ Extend the existing .NET-hosted static single-page shell in place. Add the User 
 - Notes or risks: Do not create a new theme, alter unrelated view styles, use CSS-only state that hides the accessibility state, or permit horizontal overflow and panel overlap.
 
 ### TASK-005: Add focused Selenium behavior coverage
-- Description: Extend the existing NUnit/Selenium coverage with stable selectors for visibility, exact labels, expansion/collapse by click, native keyboard access, observable accessibility state, exact placeholder messages, non-anchor semantics, no URL navigation, no user-management API calls, and transient `.story-panel` rendering.
+- Description: Extend the existing NUnit/Selenium coverage with stable selectors for visibility, exact labels, expansion/collapse by pointer click and native keyboard activation, synchronized submenu visibility, `aria-expanded`, plus/minus icon state, resolved placeholder behavior, and focused regression coverage for the persistent shell and existing navigation.
 - Primary layer impacted: Selenium UI tests.
 - Dependencies: TASK-001 through TASK-004.
-- Expected outcome: The approved interaction rule is executable and regressions fail with focused diagnostics.
+- Expected outcome: The approved menu interaction rule is executable and presentation-only regressions fail with focused diagnostics; placeholder assertions are included only after their semantics and wording are resolved.
 - Notes or risks: Assert DOM/accessibility state rather than timing or CSS-only assumptions. Use request inspection or the existing harness capability to demonstrate no unsupported user-management request; do not claim network evidence if the harness cannot observe it.
 
 ### TASK-006: Add persistence, regression, and narrow-layout coverage
@@ -106,11 +105,10 @@ Extend the existing .NET-hosted static single-page shell in place. Add the User 
 - Verify the submenu contains exactly `Add User` and `Search User` after expansion.
 - Verify click expansion and collapse, with `aria-expanded`/`aria-controls` or equivalent observable DOM state changing correctly.
 - Verify native keyboard activation of the User Management button and keyboard access to the submenu controls.
-- Verify Add User and Search User are non-anchor in-page controls and do not expose unsupported navigation targets.
-- Verify Add User renders `Add User is reserved for future development.` inside `.story-panel`, with `data-testid="add-user-placeholder"`.
-- Verify Search User renders `Search User is reserved for future development.` inside `.story-panel`, with `data-testid="search-user-placeholder"`.
-- Verify exact message text, stable selectors, and no stale opposite placeholder remain after switching controls.
-- Verify placeholder activation does not change the URL/history, submit a form, navigate to a broken route, or issue a user-management API/network request when the test harness can observe requests.
+- Verify Add User and Search User use the control semantics selected by the approved interaction decision and do not expose unsupported navigation targets.
+- Verify each resolved placeholder renders inside `.story-panel` with its stable selector (`data-testid="add-user-placeholder"` or `data-testid="search-user-placeholder"`).
+- Verify the approved message wording, stable selectors, and absence of stale opposite placeholder content after switching controls.
+- Verify placeholder activation follows the resolved URL behavior, does not submit unsupported data or navigate to a broken route, and does not issue a user-management API/network request when the test harness can observe requests.
 - Verify the navigation, page shell, and exactly one footer remain present after placeholder activation.
 - Preserve the existing assertion that `[data-testid='navigation'] a` contains exactly four anchors.
 - Verify Home, Calculate Bill, Add/Remove Cafe Menu, and Reach Us At remain usable after placeholder views.
@@ -129,8 +127,8 @@ Extend the existing .NET-hosted static single-page shell in place. Add the User 
 - Use JavaScript geometry checks for the narrow viewport and verify the footer remains outside `.story-panel` exactly once.
 
 ### Coverage classification
-- Positive: Persistent visibility, exact labels/messages, expansion, keyboard access, and return to existing views.
-- Negative: No anchor semantics, no URL change, no unsupported route, no form submission, no API call, no persistence, no duplicate shell/footer, and no unhandled client error caused by placeholders.
+- Positive: Persistent visibility, exact labels, resolved placeholder wording, expansion, keyboard access, and return to existing views.
+- Negative: No unsupported control target, route, form submission, API call, persistence, duplicate shell/footer, or unhandled client error caused by placeholders.
 - Accessibility: Native button semantics, keyboard operation, observable expansion state, focus treatment, and accessible control labeling.
 - Boundary: Initial collapsed state, repeated expand/collapse and placeholder transitions, four-anchor regression, 700-pixel-or-lower geometry, viewport bounds, and horizontal overflow.
 - Conditional: Network-request inspection and any error-state/final-bill coverage require deterministic harness setup and must be reported as executed or unexecuted with evidence.
@@ -140,7 +138,7 @@ Extend the existing .NET-hosted static single-page shell in place. Add the User 
 - Run `dotnet build CafeManagement.sln` to verify the host and test projects compile without backend changes.
 - Start the application using the existing launch configuration or `dotnet run --project src/CafeManagement/CafeManagement.csproj --urls http://localhost:8080` for Selenium execution when that is the configured local URL.
 - Run the focused UI suite after implementation, for example `dotnet test tests/CafeManagement.UiTests/CafeManagement.UiTests.csproj --filter "FullyQualifiedName~UserManagement"`, together with the existing navigation regression tests. Use the actual test names once added; do not claim a filter passed if no matching tests exist.
-- Verify exact User Management labels, submenu state, keyboard behavior, placeholder messages, non-anchor semantics, no URL/API behavior, shell/footer persistence, four-anchor count, existing-view restoration, and narrow viewport geometry.
+- Verify exact User Management labels, synchronized submenu state, pointer and keyboard behavior, resolved placeholder messages and semantics, approved URL/API behavior, shell/footer persistence, four-anchor count, existing-view restoration, and narrow viewport geometry.
 - Inspect `git diff --check` and the final working tree to confirm only the approved UI, generated TypeScript artifact, Selenium coverage, and this plan are involved; no C#, SQL, persistence, auth, or authorization files are changed.
 
 ## 8. Risks, Dependencies, and Open Questions
@@ -169,12 +167,12 @@ Extend the existing .NET-hosted static single-page shell in place. Add the User 
 ## 9. Definition of Done
 - User Management is persistently visible with the exact label on all current application views.
 - The User Management button expands and collapses by click and native keyboard activation, with observable accessible state.
-- The submenu exposes exactly Add User and Search User as non-anchor in-page controls.
-- Add User and Search User render their exact approved future-development messages in `.story-panel` using stable selectors.
-- Placeholder interactions do not navigate, change URL/history, submit data, call unsupported APIs, or persist user data.
+- The submenu exposes exactly Add User and Search User with the control semantics selected by the approved interaction decision.
+- Add User and Search User render the approved future-development messages in `.story-panel` using stable selectors.
+- Placeholder interactions follow the approved URL behavior and do not submit unsupported data, call unsupported APIs, or persist user data.
 - The existing theme, typography, shell, footer, and responsive behavior remain intact, including the narrow viewport layout.
 - `src/main.ts` and generated `wwwroot/main.js` are synchronized through `npm run build`.
-- Selenium coverage verifies visibility, expansion/collapse, keyboard access, exact messages, non-anchor semantics, no navigation/API calls where observable, shell/footer persistence, the existing four-anchor regression, existing-view restoration, and narrow-layout geometry.
+- Selenium coverage verifies visibility, synchronized expansion/collapse, pointer and keyboard access, approved messages and control semantics, URL/API behavior where observable, shell/footer persistence, the existing four-anchor regression, existing-view restoration, and narrow-layout geometry.
 - `npm run build`, `dotnet build CafeManagement.sln`, and applicable focused Selenium tests have executable evidence recorded factually.
 - No C# backend, API, SQL, persistence, authentication, or authorization changes are made for US-007.
 - The implementation diff is limited to the approved UI, generated browser artifact, tests, and related workflow evidence; source story and architecture documents remain unchanged.

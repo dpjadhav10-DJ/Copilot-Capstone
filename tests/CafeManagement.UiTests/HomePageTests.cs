@@ -60,22 +60,26 @@ public sealed class HomePageTests
         _driver.Navigate().GoToUrl(Environment.GetEnvironmentVariable("CAFE_BASE_URL") ?? "http://localhost:8080");
         var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
         var userManagement = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management']"));
+        var userManagementToggle = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management-toggle']"));
+        var userManagementIcon = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management-icon']"));
         var submenu = _driver.FindElement(By.CssSelector("[data-testid='user-management-submenu']"));
         var initialUrl = _driver.Url;
 
-        Assert.That(userManagement.TagName, Is.EqualTo("button"));
-        Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("false"));
-        Assert.That(userManagement.GetAttribute("aria-controls"), Is.EqualTo("user-management-submenu"));
+        Assert.That(userManagement.TagName, Is.EqualTo("div"));
+        Assert.That(userManagementToggle.TagName, Is.EqualTo("button"));
+        Assert.That(userManagementToggle.GetAttribute("id"), Is.EqualTo("nav-user-management-toggle"));
+        Assert.That(userManagementToggle.GetAttribute("aria-expanded"), Is.EqualTo("false"));
+        Assert.That(userManagementToggle.GetAttribute("aria-controls"), Is.EqualTo("user-management-submenu"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Not.Null);
+        Assert.That(userManagementIcon.GetAttribute("data-icon"), Is.EqualTo("plus"));
         Assert.That(submenu.FindElements(By.CssSelector("button")), Has.Count.EqualTo(2));
-        AssertPlainSidePanelLinkStyle(userManagement, _driver.FindElement(By.CssSelector("[data-testid='nav-home']")));
+        AssertPlainSidePanelLinkStyle(userManagementToggle, _driver.FindElement(By.CssSelector("[data-testid='nav-home']")));
         Assert.That(_driver.FindElement(By.CssSelector("[data-testid='nav-add-user']")).TagName, Is.EqualTo("button"));
 
-        userManagement.SendKeys(Keys.Enter);
-        Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("true"));
+        userManagementToggle.Click();
+        Assert.That(userManagementToggle.GetAttribute("aria-expanded"), Is.EqualTo("true"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Null);
-        var disclosureIndicator = userManagement.FindElement(By.CssSelector(".disclosure-indicator"));
-        Assert.That(GetDisclosureIndicator(disclosureIndicator), Is.EqualTo("\"-\""));
+        Assert.That(userManagementIcon.GetAttribute("data-icon"), Is.EqualTo("minus"));
         Assert.That(submenu.Text, Is.EqualTo("Add User\r\nSearch User").Or.EqualTo("Add User\nSearch User"));
         Assert.That(_driver.FindElements(By.CssSelector("[data-testid='navigation'] a")), Has.Count.EqualTo(4));
         var submenuButton = _driver.FindElement(By.CssSelector("[data-testid='nav-add-user']"));
@@ -103,18 +107,18 @@ public sealed class HomePageTests
     {
         _driver.Navigate().GoToUrl(Environment.GetEnvironmentVariable("CAFE_BASE_URL") ?? "http://localhost:8080");
 
-        var userManagement = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management']"));
+        var userManagement = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management-toggle']"));
         var submenu = _driver.FindElement(By.CssSelector("[data-testid='user-management-submenu']"));
 
         userManagement.SendKeys(Keys.Space);
         Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("true"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Null);
+        Assert.That(_driver.FindElement(By.CssSelector("[data-testid='nav-user-management-icon']")).GetAttribute("data-icon"), Is.EqualTo("minus"));
 
-        var disclosureIndicator = userManagement.FindElement(By.CssSelector(".disclosure-indicator"));
-        disclosureIndicator.Click();
+        userManagement.Click();
         Assert.That(userManagement.GetAttribute("aria-expanded"), Is.EqualTo("false"));
         Assert.That(submenu.GetAttribute("hidden"), Is.Not.Null);
-        Assert.That(GetDisclosureIndicator(disclosureIndicator), Is.EqualTo("\"+\""));
+        Assert.That(_driver.FindElement(By.CssSelector("[data-testid='nav-user-management-icon']")).GetAttribute("data-icon"), Is.EqualTo("plus"));
     }
 
     [Test]
@@ -123,7 +127,7 @@ public sealed class HomePageTests
         _driver.Navigate().GoToUrl(Environment.GetEnvironmentVariable("CAFE_BASE_URL") ?? "http://localhost:8080");
         var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
 
-        var userManagement = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management']"));
+        var userManagement = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management-toggle']"));
         userManagement.SendKeys(Keys.Enter);
         _driver.FindElement(By.CssSelector("[data-testid='nav-add-user']")).SendKeys(Keys.Enter);
         wait.Until(driver => driver.FindElement(By.CssSelector("[data-testid='add-user-placeholder']")).Displayed);
@@ -146,7 +150,7 @@ public sealed class HomePageTests
 
         foreach (var navigationTestId in new[] { "nav-home", "nav-calculate-bill", "nav-menu", "nav-contact" })
         {
-            var userManagement = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management']"));
+            var userManagement = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management-toggle']"));
             if (userManagement.GetAttribute("aria-expanded") != "true") userManagement.SendKeys(Keys.Enter);
             Assert.That(_driver.FindElement(By.CssSelector("[data-testid='nav-add-user']")).Displayed, Is.True);
             _driver.FindElement(By.CssSelector($"[data-testid='{navigationTestId}']")).Click();
@@ -159,7 +163,7 @@ public sealed class HomePageTests
                 wait.Until(driver => driver.FindElement(By.CssSelector(".story-panel h2")).Displayed);
             }
 
-            var userButton = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management']"));
+            var userButton = _driver.FindElement(By.CssSelector("[data-testid='nav-user-management-toggle']"));
             Assert.That(userButton.Displayed, Is.True);
             Assert.That((bool)script.ExecuteScript("const rect = arguments[0].getBoundingClientRect(); return rect.left >= 0 && rect.right <= window.innerWidth;", userButton), Is.True);
             if (userButton.GetAttribute("aria-expanded") == "true")
@@ -332,11 +336,6 @@ public sealed class HomePageTests
         var controlStyle = (Dictionary<string, object>)script.ExecuteScript("const style = getComputedStyle(arguments[0]); return { color: style.color, fontFamily: style.fontFamily, fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight, textDecoration: style.textDecorationLine, background: style.backgroundColor };", control);
 
         Assert.That(controlStyle, Is.EqualTo(linkStyle));
-    }
-
-    private string GetDisclosureIndicator(IWebElement disclosureIndicator)
-    {
-        return (string)((IJavaScriptExecutor)_driver).ExecuteScript("return getComputedStyle(arguments[0], '::before').content;", disclosureIndicator);
     }
 
 }

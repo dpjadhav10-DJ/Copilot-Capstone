@@ -28,8 +28,8 @@
         <a href="#calculate-bill" id="calculate-bill-link" data-testid="nav-calculate-bill">Calculate Bill</a>
         <a href="#menu" id="menu-link" data-testid="nav-menu">Add/Remove Cafe Menu</a>
         <a href="#contact-us" data-testid="nav-contact">Reach Us At</a>
-        <div class="user-management">
-          <button type="button" data-testid="nav-user-management" aria-expanded="false" aria-controls="user-management-submenu">User Management <span class="disclosure-indicator" aria-hidden="true"></span></button>
+        <div class="user-management" data-testid="nav-user-management">
+          <button type="button" id="nav-user-management-toggle" data-testid="nav-user-management-toggle" aria-expanded="false" aria-controls="user-management-submenu">User Management <span class="disclosure-indicator" data-testid="nav-user-management-icon" data-icon="plus" aria-hidden="true"></span></button>
           <div id="user-management-submenu" class="user-management-submenu" data-testid="user-management-submenu" hidden>
             <button type="button" data-testid="nav-add-user">Add User</button>
             <button type="button" data-testid="nav-search-user">Search User</button>

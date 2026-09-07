@@ -4,8 +4,9 @@ const homeLink = document.querySelector('[data-testid="nav-home"]');
 const menuLink = document.querySelector('#menu-link');
 const calculateBillLink = document.querySelector('#calculate-bill-link');
 const contactLink = document.querySelector('[data-testid="nav-contact"]');
-const userManagementButton = document.querySelector('[data-testid="nav-user-management"]');
+const userManagementButton = document.querySelector('[data-testid="nav-user-management-toggle"]');
 const userManagementSubmenu = document.querySelector('[data-testid="user-management-submenu"]');
+const userManagementIcon = document.querySelector('[data-testid="nav-user-management-icon"]');
 const addUserButton = document.querySelector('[data-testid="nav-add-user"]');
 const searchUserButton = document.querySelector('[data-testid="nav-search-user"]');
 let billLines = [];
@@ -55,12 +56,17 @@ function showUserPlaceholder(message, testId) {
         return;
     storyPanel.innerHTML = `<div class="section-kicker">User management</div><h2 id="story-heading">${message.split(' is ')[0]}</h2><p class="user-placeholder" data-testid="${testId}">${message}</p>`;
 }
-function toggleUserManagement() {
+function setUserManagementExpanded(expanded) {
     if (!userManagementButton || !userManagementSubmenu)
         return;
-    const expanded = userManagementButton.getAttribute('aria-expanded') === 'true';
-    userManagementButton.setAttribute('aria-expanded', String(!expanded));
-    userManagementSubmenu.hidden = expanded;
+    userManagementButton.setAttribute('aria-expanded', String(expanded));
+    userManagementSubmenu.hidden = !expanded;
+    userManagementIcon?.setAttribute('data-icon', expanded ? 'minus' : 'plus');
+}
+function toggleUserManagement() {
+    if (!userManagementButton)
+        return;
+    setUserManagementExpanded(userManagementButton.getAttribute('aria-expanded') !== 'true');
 }
 async function loadBillOptions() {
     const select = document.querySelector('#bill-item');

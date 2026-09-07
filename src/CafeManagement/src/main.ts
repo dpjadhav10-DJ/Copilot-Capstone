@@ -12,8 +12,9 @@ const homeLink = document.querySelector<HTMLAnchorElement>('[data-testid="nav-ho
 const menuLink = document.querySelector<HTMLAnchorElement>('#menu-link');
 const calculateBillLink = document.querySelector<HTMLAnchorElement>('#calculate-bill-link');
 const contactLink = document.querySelector<HTMLAnchorElement>('[data-testid="nav-contact"]');
-const userManagementButton = document.querySelector<HTMLButtonElement>('[data-testid="nav-user-management"]');
+const userManagementButton = document.querySelector<HTMLButtonElement>('[data-testid="nav-user-management-toggle"]');
 const userManagementSubmenu = document.querySelector<HTMLElement>('[data-testid="user-management-submenu"]');
+const userManagementIcon = document.querySelector<HTMLElement>('[data-testid="nav-user-management-icon"]');
 const addUserButton = document.querySelector<HTMLButtonElement>('[data-testid="nav-add-user"]');
 const searchUserButton = document.querySelector<HTMLButtonElement>('[data-testid="nav-search-user"]');
 let billLines: BillLine[] = [];
@@ -65,11 +66,16 @@ function showUserPlaceholder(message: string, testId: string): void {
   storyPanel.innerHTML = `<div class="section-kicker">User management</div><h2 id="story-heading">${message.split(' is ')[0]}</h2><p class="user-placeholder" data-testid="${testId}">${message}</p>`;
 }
 
-function toggleUserManagement(): void {
+function setUserManagementExpanded(expanded: boolean): void {
   if (!userManagementButton || !userManagementSubmenu) return;
-  const expanded = userManagementButton.getAttribute('aria-expanded') === 'true';
-  userManagementButton.setAttribute('aria-expanded', String(!expanded));
-  userManagementSubmenu.hidden = expanded;
+  userManagementButton.setAttribute('aria-expanded', String(expanded));
+  userManagementSubmenu.hidden = !expanded;
+  userManagementIcon?.setAttribute('data-icon', expanded ? 'minus' : 'plus');
+}
+
+function toggleUserManagement(): void {
+  if (!userManagementButton) return;
+  setUserManagementExpanded(userManagementButton.getAttribute('aria-expanded') !== 'true');
 }
 
 async function loadBillOptions(): Promise<void> {

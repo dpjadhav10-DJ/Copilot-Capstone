@@ -18,12 +18,15 @@ The application shall display a left-panel menu item with the exact text **"User
 - The item shall remain present when the right-side content panel changes between existing views.
 
 ### FR-002: Expose the two User Management submenu items
-When the User Management menu is expanded, the application shall expose exactly these submenu labels:
+The User Management menu shall provide a single toggle control that synchronously expands and collapses its submenu when clicked. When expanded, the application shall expose exactly these submenu labels:
 
 - **"Add User"**
 - **"Search User"**
 
-The story does not define whether the submenu is expanded by click, hover, keyboard interaction, or whether it is expanded by default. This interaction must be clarified before implementation unless the established navigation pattern determines it without ambiguity.
+- When collapsed, both submenu items shall be hidden from the visible navigation and unavailable as visible submenu choices.
+- The toggle shall expose `aria-expanded="true"` while the submenu is visible and `aria-expanded="false"` while it is hidden.
+- The toggle icon shall show a minus state while expanded and a plus state while collapsed; the icon state, `aria-expanded` value, and submenu visibility shall update together on every toggle activation.
+- The toggle shall support the existing navigation's keyboard activation pattern as well as pointer click, without opening a route or broken page.
 
 ### FR-003: Show an Add User future-development placeholder
 When the user activates **"Add User"**, the right-side content panel shall display a clear future-development message for the Add User capability.
@@ -60,12 +63,13 @@ The definition of done states that the links should not be clickable, while Requ
 - **BR-004:** New navigation must not produce broken pages or an undesirable application state.
 - **BR-005:** The new UI must follow the existing theme, color scheme, and design.
 - **BR-006:** User Management links must be visible on all application pages.
+- **BR-007:** User Management submenu expansion and collapse shall be controlled by the User Management toggle; the submenu shall be visible only when expanded.
+- **BR-008:** The User Management toggle shall keep submenu visibility, `aria-expanded`, and plus/minus icon state synchronized: expanded means visible, `aria-expanded="true"`, and minus; collapsed means hidden, `aria-expanded="false"`, and plus.
 
 ### Ambiguous or unresolved rules
-- **BR-007:** The source simultaneously requires submenu activation to display a future-development message and says links should not be clickable. The expected control semantics are not confirmed.
-- **BR-008:** The exact wording of the future-development message is not specified.
-- **BR-009:** The source does not specify whether User Management expands on click, hover, keyboard activation, or another interaction.
-- **BR-010:** The source does not specify whether the placeholder state should be addressable by a URL/hash or remain entirely client-rendered.
+- **BR-009:** The source simultaneously requires submenu activation to display a future-development message and says links should not be clickable. The expected placeholder-control semantics remain unresolved.
+- **BR-010:** The exact wording of the future-development message is not specified.
+- **BR-011:** The source does not specify whether the placeholder state should be addressable by a URL/hash or remain entirely client-rendered.
 
 ### Validation requirements
 - **BR-011:** The placeholder controls must not submit data, call a user-management API, or persist user data because no such functionality is specified.
@@ -105,38 +109,44 @@ The existing UI tests use NUnit, Selenium WebDriver, Chrome, `data-testid` selec
 - **Expected result:** `User Management` remains visible on every view and the page shell does not break.
 - **Selectors/testability:** Use the navigation test id and existing view heading/content test ids.
 
-### UI-003: User Management exposes the required submenu labels
+### UI-003: User Management submenu expands and collapses as one synchronized interaction
 - **Setup:** Open the initial page.
-- **Actions:** Perform the approved expansion interaction for User Management.
-- **Expected result:** The submenu exposes `Add User` and `Search User`, with no additional user-management items required by this story.
-- **Selectors/testability:** Use stable test ids such as `nav-add-user` and `nav-search-user`; the expansion state should be observable through an accessible attribute or DOM state.
+- **Actions:** Inspect the initial collapsed state, click the User Management toggle, inspect the expanded state, then click the toggle again.
+- **Expected result:** Initially, the submenu is hidden, the toggle exposes `aria-expanded="false"`, and the toggle icon is plus. After the first click, the submenu visibly exposes `Add User` and `Search User`, `aria-expanded` is `true`, and the icon is minus. After the second click, both submenu items are hidden again, `aria-expanded` is `false`, and the icon returns to plus.
+- **Selectors/testability:** Use stable test ids such as `nav-user-management`, `nav-user-management-toggle`, `nav-user-management-icon`, `nav-add-user`, and `nav-search-user`; assert both the accessible expansion attribute and the visibility/icon state after each toggle.
 
-### UI-004: Add User placeholder behavior
+### UI-004: User Management submenu supports keyboard expansion and collapse
+- **Setup:** Open the initial page with the User Management submenu collapsed.
+- **Actions:** Focus the User Management toggle, activate it with the existing keyboard activation pattern, then activate it again.
+- **Expected result:** Keyboard activation produces the same expanded and collapsed states as pointer click, with submenu visibility, `aria-expanded`, and plus/minus icon state changing synchronously.
+- **Selectors/testability:** Reuse the User Management toggle test id and assert the same accessible attribute, visibility, and icon-state selectors as UI-003.
+
+### UI-005: Add User placeholder behavior
 - **Setup:** Expand User Management.
 - **Actions:** Apply the approved Add User interaction.
 - **Expected result:** The right-side content panel displays a future-development message, remains inside the application shell, and does not open a broken page.
 - **Selectors/testability:** Provide a stable placeholder heading/content test id and an observable message.
 - **Negative path:** No request should be made to an unsupported Add User endpoint.
 
-### UI-005: Search User placeholder behavior
+### UI-006: Search User placeholder behavior
 - **Setup:** Expand User Management.
 - **Actions:** Apply the approved Search User interaction.
 - **Expected result:** The right-side content panel displays a future-development message, remains inside the application shell, and does not open a broken page.
 - **Selectors/testability:** Provide a stable placeholder heading/content test id and an observable message.
 - **Negative path:** No request should be made to an unsupported Search User endpoint.
 
-### UI-006: Resolve and test non-clickable semantics
+### UI-007: Resolve and test non-clickable semantics
 - **Setup:** Use the approved interpretation of the definition-of-done statement.
 - **Actions:** Attempt to activate the User Management controls as a user would.
 - **Expected result:** The controls either remain non-interactive and clearly indicate future availability, or activate only the approved in-page placeholder behavior without navigation. The selected behavior must be documented and tested consistently.
-- **Dependency:** Blocked until BR-007 is clarified.
+- **Dependency:** Blocked until BR-009 is clarified.
 
-### UI-007: Existing navigation remains responsive after placeholder views
+### UI-008: Existing navigation remains responsive after placeholder views
 - **Setup:** Start at the application home page.
 - **Actions:** Enter Add User and Search User placeholder states, then select Home and each existing top-level navigation item.
 - **Expected result:** Existing views render normally; no broken page, duplicate shell, stale error, or unhandled client error is visible.
 
-### UI-008: Narrow viewport presentation
+### UI-009: Narrow viewport presentation
 - **Setup:** Set the browser viewport to the existing narrow responsive test size.
 - **Actions:** Open the application and inspect the User Management menu and submenu.
 - **Expected result:** Labels and controls remain visible within the viewport, do not overlap the content panel, and preserve the existing responsive layout.
@@ -152,12 +162,12 @@ The existing UI tests use NUnit, Selenium WebDriver, Chrome, `data-testid` selec
 
 | Functional requirement | Backend coverage | SQL coverage | Selenium coverage |
 |---|---|---|---|
-| FR-001 Display User Management | No endpoint required; client-only | None | UI-001, UI-002, UI-008 |
-| FR-002 Expose Add User and Search User | No endpoint required; client-only | None | UI-003, UI-006 |
-| FR-003 Add User placeholder | No endpoint; stable client-side message | None | UI-004, UI-007 |
-| FR-004 Search User placeholder | No endpoint; stable client-side message | None | UI-005, UI-007 |
-| FR-005 Prevent broken navigation states | Error avoidance; no unsupported requests | None | UI-004, UI-005, UI-007, UI-008 |
-| FR-006 Resolve non-clickable behavior | No backend navigation contract | None | UI-006 |
+| FR-001 Display User Management | No endpoint required; client-only | None | UI-001, UI-002, UI-009 |
+| FR-002 Expose Add User and Search User | No endpoint required; client-only | None | UI-003, UI-004, UI-006, UI-009 |
+| FR-003 Add User placeholder | No endpoint; stable client-side message | None | UI-005, UI-008 |
+| FR-004 Search User placeholder | No endpoint; stable client-side message | None | UI-006, UI-008 |
+| FR-005 Prevent broken navigation states | Error avoidance; no unsupported requests | None | UI-005, UI-006, UI-008, UI-009 |
+| FR-006 Resolve non-clickable behavior | No backend navigation contract | None | UI-007 |
 
 ## 9. Assumptions, Dependencies, and Open Questions
 
@@ -166,6 +176,7 @@ The existing UI tests use NUnit, Selenium WebDriver, Chrome, `data-testid` selec
 - The target artifact is this file, `US-007-RequirementAnalysis.md`, in the same `US-007` folder.
 - The current application uses a left navigation panel and a right-side client-rendered content panel.
 - The current repository has no user-management API, model, service, database table, or Selenium test for US-007.
+- The User Management submenu defect is limited to synchronized toggle behavior: click or keyboard activation must update submenu visibility, `aria-expanded`, and plus/minus icon state together.
 
 ### Assumptions
 - The placeholder can be implemented in the existing client-rendered content panel without a new backend or database contract.
@@ -175,15 +186,14 @@ The existing UI tests use NUnit, Selenium WebDriver, Chrome, `data-testid` selec
 ### Dependencies
 - Existing application shell, navigation styling, and client-side view-rendering pattern.
 - Selenium/Chrome test environment and a running application base URL for executable UI verification.
-- Product/design decision resolving whether the new controls are disabled or activate an in-page placeholder message.
+- Product/design decision resolving whether the submenu placeholder controls are disabled or activate an in-page placeholder message.
 
 ### Open questions
 1. How can Add User and Search User both be activated to show a message if the definition of done says the links should not be clickable?
 2. What exact future-development message should each submenu display?
-3. Should User Management expand on click, hover, keyboard activation, or be expanded by default?
-4. Should the User Management placeholder state be represented in the URL/hash, or should it remain client-rendered only?
-5. Does "visible in all the pages" include every future page introduced after US-007, or only the existing application views?
-6. Should the placeholder controls be enabled, disabled, or rendered as non-link text until the future feature is delivered?
+3. Should the User Management placeholder state be represented in the URL/hash, or should it remain client-rendered only?
+4. Does "visible in all the pages" include every future page introduced after US-007, or only the existing application views?
+5. Should the placeholder controls be enabled, disabled, or rendered as non-link text until the future feature is delivered?
 
 ## 10. Acceptance Criteria
 
@@ -191,12 +201,15 @@ The source acceptance criteria are rewritten below as testable statements withou
 
 - **AC-001:** On every existing application page/view, the left panel visibly contains a menu item labeled `User Management`.
 - **AC-002:** The User Management menu exposes submenu items labeled `Add User` and `Search User`.
-- **AC-003:** The approved interaction with `Add User` displays a future-development message in the right-side content panel.
-- **AC-004:** The approved interaction with `Search User` displays a future-development message in the right-side content panel.
-- **AC-005:** Activating or attempting to activate the new controls does not open a broken page or leave the application in an undesirable state.
-- **AC-006:** The new menu and submenu presentation follows the existing theme, color scheme, and design.
-- **AC-007:** The final control behavior satisfies the definition-of-done requirement that the links should not be clickable, once the ambiguity between that statement and AC-003/AC-004 is resolved and documented.
-- **AC-008:** Existing application navigation remains usable after the new placeholder menu is displayed or used.
+- **AC-003:** With the submenu collapsed, `Add User` and `Search User` are hidden, the User Management toggle exposes `aria-expanded="false"`, and its icon is plus.
+- **AC-004:** Clicking or keyboard-activating the User Management toggle expands the submenu, makes both submenu items visible, sets `aria-expanded="true"`, and changes the icon to minus in the same interaction.
+- **AC-005:** Activating the expanded User Management toggle collapses the submenu, hides both submenu items, sets `aria-expanded="false"`, and changes the icon to plus in the same interaction.
+- **AC-006:** The approved interaction with `Add User` displays a future-development message in the right-side content panel.
+- **AC-007:** The approved interaction with `Search User` displays a future-development message in the right-side content panel.
+- **AC-008:** Activating or attempting to activate the new controls does not open a broken page or leave the application in an undesirable state.
+- **AC-009:** The new menu and submenu presentation follows the existing theme, color scheme, and design.
+- **AC-010:** The final control behavior satisfies the definition-of-done requirement that the links should not be clickable, once the ambiguity between that statement and AC-006/AC-007 is resolved and documented.
+- **AC-011:** Existing application navigation remains usable after the new placeholder menu is displayed or used, including after repeated submenu expand/collapse cycles.
 
 ### Missing or blocked acceptance detail
-The story does not define the exact placeholder message, submenu expansion interaction, or the precise meaning of "links should not be clickable." These must be clarified before implementation and final acceptance testing. No backend, SQL, or persistence acceptance criteria are supported by the source story.
+The story does not define the exact placeholder message or the precise meaning of "links should not be clickable." These must be clarified before implementation and final acceptance testing. No backend, SQL, or persistence acceptance criteria are supported by the source story. The submenu expand/collapse behavior is defined here as a synchronized, testable defect-specific requirement and regression expectation.
