@@ -26,6 +26,12 @@ h1 { margin: 0; color: var(--paper); font-family: 'Pacifico', cursive; font-size
 .side-panel { display: flex; flex-direction: column; gap: 7px; padding: 48px 34px; border-right: 1px solid var(--line); background: var(--sage); }
 .side-panel a { width: fit-content; padding: 8px 0; color: var(--ink); font-size: 14px; text-decoration: none; border-bottom: 1px solid transparent; }
 .side-panel a:hover, .side-panel a:focus-visible { color: var(--terracotta); border-bottom-color: var(--terracotta); outline: none; }
+.user-management { display: grid; gap: 4px; }
+.user-management > button, .user-management-submenu button { width: fit-content; padding: 8px 0; background: transparent; color: var(--ink); text-align: left; }
+.user-management > button { font-size: 14px; }
+.user-management > button:hover, .user-management > button:focus-visible, .user-management-submenu button:hover, .user-management-submenu button:focus-visible { color: var(--terracotta); outline: 2px solid var(--terracotta); outline-offset: 3px; }
+.user-management-submenu { display: grid; gap: 2px; padding-left: 14px; border-left: 1px solid var(--line); }
+.user-management-submenu button { font-size: 13px; }
 .side-note { margin-top: auto; color: var(--green); font-family: 'Pacifico', cursive; font-size: 16px; line-height: 1.5; }
 .story-panel { padding: 58px 68px; }
 .story-panel h2 { max-width: 520px; margin: 0 0 28px; font-size: clamp(30px, 4vw, 48px); font-weight: 500; line-height: 1.1; }
@@ -42,6 +48,7 @@ h1 { margin: 0; color: var(--paper); font-family: 'Pacifico', cursive; font-size
 .contact-logo-instagram { font-size: 12px; letter-spacing: 0; }
 .loading-state { color: var(--muted); font-style: italic; }
 .error-state { max-width: 540px; padding: 18px 20px; border-left: 3px solid var(--terracotta); background: #fff1eb; color: #744532; line-height: 1.5; }
+.user-placeholder { max-width: 540px; padding: 18px 20px; border-left: 3px solid var(--terracotta); background: #fff1eb; color: #744532; font-size: 18px; line-height: 1.5; }
 .menu-actions { display: flex; gap: 12px; margin: 0 0 24px; }
 button { border: 0; padding: 11px 16px; background: var(--green); color: var(--paper); font: inherit; cursor: pointer; }
 button:disabled { opacity: .45; cursor: not-allowed; }
